@@ -3,7 +3,7 @@
 
 ![](https://travis-ci.org/BlueShift-FTC5549/Rover-Ruckus)
 
-![](BlueShiftLogo.png)
+![](BlueShift.png)
 
 This repository is the version control hub of Team Blue Shift [FTC5549] for the FIRST Tech Challenge 2019-2020 event "SkyStone". Updating nearly daily, the repository will include a collection of Autonomous and TeleOP programs as well as custom libraries and objects used during our team's competition matches.
 
