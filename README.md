@@ -6,7 +6,6 @@ This repository is the version control hub of Team Blue Shift [FTC5549] for the 
 Blue Shift shares all of our code so that other teams may learn from our programming and so that we may also learn from others. We are completely transparent with our progress.
 
 
-
 ## Release History
 
 * 0.1.0
