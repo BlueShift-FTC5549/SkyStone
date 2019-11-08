@@ -1,7 +1,7 @@
 # FTC SkyStone
 > SkyStone robot code created by the programmers of Team Blue Shift [FTC5549].
 
-![Build Status](https://travis-ci.org/BlueShift-FTC5549/Rover-Ruckus)
+![](https://travis-ci.org/BlueShift-FTC5549/Rover-Ruckus)
 
 ![](BlueShiftLogo.png)
 

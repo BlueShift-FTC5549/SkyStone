@@ -52,7 +52,7 @@
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="45">
-              <caret line="3" column="22" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="22" />
+              <caret line="3" column="87" lean-forward="true" selection-start-line="3" selection-start-column="17" selection-end-line="3" selection-end-column="87" />
             </state>
           </provider>
         </entry>
@@ -376,7 +376,21 @@
       <option name="project" value="LOCAL" />
       <updated>1573184756482</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="v 0.1.0&#10;&#10;Configured Readme.md">
+      <created>1573184977472</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1573184977472</updated>
+    </task>
+    <task id="LOCAL-00010" summary="v 0.1.0&#10;&#10;Configured Readme.md">
+      <created>1573185089321</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1573185089321</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -384,7 +398,7 @@
     <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.3590844" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.26680973" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Build Variants" order="3" side_tool="true" />
       <window_info id="Image Layers" order="4" />
@@ -496,7 +510,7 @@
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
-          <caret line="3" column="22" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="22" />
+          <caret line="3" column="87" lean-forward="true" selection-start-line="3" selection-start-column="17" selection-end-line="3" selection-end-column="87" />
         </state>
       </provider>
     </entry>
