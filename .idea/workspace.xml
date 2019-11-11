@@ -3,44 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ab8d0762-08b8-4dc9-a323-bf2f255a843d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/AndroidManifest.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/ActivityViewDisplay.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/CameraViewDisplay.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/CustomCameraView.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/DogeCV.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/Dogeforia.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/DrawViewSource.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/OpenCVLoader.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/OpenCVPipeline.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/ViewDisplay.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/detectors/BlankDetector.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/detectors/DogeCVDetector.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/detectors/GenericDetector.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/detectors/roverrukus/GoldAlignDetector.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/detectors/roverrukus/GoldDetector.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/detectors/roverrukus/HoughSilverDetector.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/detectors/roverrukus/SamplingOrderDetector.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/detectors/roverrukus/SilverDetector.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/filters/DogeCVColorFilter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/filters/HSVColorFilter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/filters/HSVRangeFilter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/filters/LeviColorFilter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/math/Circle.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/math/Line.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/math/Lines.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/math/MathFTC.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/math/Points.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/scoring/ColorDevScorer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/scoring/DogeCVScorer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/scoring/MaxAreaScorer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/scoring/PerfectAreaScorer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/java/com/disnodeteam/dogecv/scoring/RatioScorer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/jniLibs/armeabi-v7a/libopencv_java3.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DogeCV/src/main/res/values/strings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/bundle_manifest/debug/processDebugManifest/bundle-manifest/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/bundle_manifest/debug/processDebugManifest/bundle-manifest/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/instant_app_manifest/debug/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/instant_app_manifest/debug/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/merged_manifests/debug/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/merged_manifests/debug/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/outputs/logs/manifest-merger-debug-report.txt" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/outputs/logs/manifest-merger-debug-report.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -85,8 +47,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="23" selection-start-line="2" selection-start-column="23" selection-end-line="2" selection-end-column="23" />
+            <state relative-caret-position="60">
+              <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
             </state>
           </provider>
         </entry>
@@ -124,6 +86,7 @@
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Driving.java" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoFourWheelDrive.java" />
+        <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous.java" />
       </list>
     </option>
   </component>
@@ -143,6 +106,11 @@
             <path>
               <item name="SkyStone" type="b2602c69:ProjectViewProjectNode" />
               <item name="SkyStone" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+            </path>
+            <path>
+              <item name="SkyStone" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SkyStone" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="DogeCV" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="SkyStone" type="b2602c69:ProjectViewProjectNode" />
@@ -417,7 +385,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573508038697</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="v 0.1.0&#10;&#10;Added DogeCV Library to SkyStone">
+      <created>1573509649601</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1573509649601</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -561,8 +536,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="23" selection-start-line="2" selection-start-column="23" selection-end-line="2" selection-end-column="23" />
+        <state relative-caret-position="60">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
         </state>
       </provider>
     </entry>
