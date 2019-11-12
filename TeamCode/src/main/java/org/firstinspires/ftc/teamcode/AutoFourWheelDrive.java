@@ -20,6 +20,9 @@ public class AutoFourWheelDrive {
     private LinearOpMode opMode;
     private ElapsedTime elapsedTime = new ElapsedTime();
 
+    //IMU
+    private IMU imu;
+
     //Instance Variables
     private boolean hasAborted;
     private boolean verboseLoops;
@@ -40,6 +43,82 @@ public class AutoFourWheelDrive {
     private static final float  ENCODER_DRIVE_POWER_OFFSET_STEP = (float)0.013;
     private static final int    ENCODER_NO_MOVEMENT_THRESHOLD = 12;
 
+    public void turn(float dTheta, double secondsTimeout) {
+        hasAborted = false;
+
+        int[] previousEncoders = new int[4];
+        float thetaInit = imu.getHeading();
+        float thetaTarget = (thetaInit + dTheta) % 360;
+        float turningPowerOffset = 0.16f;
+
+        telemetry.addData("Turning", "Starting at " + thetaInit + " degrees");
+        telemetry.update();
+
+        resetEncoders();
+        elapsedTime.reset();
+
+        if (!verboseLoops) {
+            while (Math.abs(thetaTarget - imu.getHeading()) % 360.0 > TURN_ERROR_ALLOWANCE
+                    && opMode.opModeIsActive()
+                    && elapsedTime.seconds() <= secondsTimeout
+                    && !hasAborted
+                    && !opMode.isStopRequested()) {
+
+                int[] currentEncoders = getEncoderValues();
+
+                double thetaCurrent = (double)imu.getHeading();
+
+                double thetaError = BlueShiftUtil.getDegreeDifference(thetaCurrent, thetaTarget);
+                double thetaPercentError = Math.abs(thetaError / dTheta);
+
+                double turnPower = Math.signum(thetaError) * (TURN_Kp * thetaPercentError * (1.0 - thetaPercentError) + turningPowerOffset);
+
+                setTurnPower(turnPower);
+
+                if (!hasAllEncodersMoved(previousEncoders, currentEncoders)) {
+                    turningPowerOffset += thetaPercentError * TURN_POWER_OFFSET_STEP; //TODO: Decide whether or not to make offset proportional
+                }
+
+                previousEncoders = currentEncoders;
+            }
+        } else {
+            while (Math.abs(thetaTarget - imu.getHeading()) % 360.0 > TURN_ERROR_ALLOWANCE
+                    && opMode.opModeIsActive()
+                    && elapsedTime.seconds() <= secondsTimeout
+                    && !hasAborted
+                    && !opMode.isStopRequested()) {
+
+                int[] currentEncoders = getEncoderValues();
+
+                double thetaCurrent = (double)imu.getHeading();
+
+                double thetaError = BlueShiftUtil.getDegreeDifference(thetaCurrent, thetaTarget);
+                double thetaPercentError = Math.abs(thetaError / dTheta);
+
+                double turnPower = Math.signum(thetaError) * (TURN_Kp * thetaPercentError * (1.0 - thetaPercentError) + turningPowerOffset);
+
+                setTurnPower(turnPower);
+
+                if (!hasAllEncodersMoved(previousEncoders, currentEncoders)) {
+                    turningPowerOffset += thetaPercentError * TURN_POWER_OFFSET_STEP;
+                }
+
+                previousEncoders = currentEncoders;
+
+                telemetry.addData("Theta Error", thetaError);
+                telemetry.addData("Percent Error", thetaPercentError);
+                telemetry.addData("Current Heading", thetaCurrent);
+                telemetry.addData("Target Heading", thetaTarget);
+                telemetry.addData("Motor Power", turnPower);
+                telemetry.update();
+            }
+        }
+
+        abortMotion();
+
+        telemetry.addData("Turning", "Complete at " + imu.getHeading() + " degrees");
+        telemetry.update();
+    }
     public void encoderStrafe(double targetDistance, double secondsTimeout) {
         hasAborted = false;
 
