@@ -2,21 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ab8d0762-08b8-4dc9-a323-bf2f255a843d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Drive_TeleOp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileChanges/last-build.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/gc.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/bundle_manifest/debug/processDebugManifest/bundle-manifest/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/bundle_manifest/debug/processDebugManifest/bundle-manifest/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/instant_app_manifest/debug/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/instant_app_manifest/debug/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/merged_manifests/debug/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/merged_manifests/debug/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoFourWheelDrive.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoFourWheelDrive.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Driving.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Driving.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -47,11 +34,28 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Driving.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="40" column="58" selection-start-line="40" selection-start-column="58" selection-end-line="40" selection-end-column="58" />
+            <state relative-caret-position="483">
+              <caret line="77" column="53" lean-forward="true" selection-start-line="77" selection-start-column="53" selection-end-line="77" selection-end-column="53" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoFourWheelDrive.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="450">
+              <caret line="46" column="20" lean-forward="true" selection-start-line="46" selection-start-column="20" selection-end-line="46" selection-end-column="20" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#19873#19874#0" expanded="true" />
+                <element signature="e#19916#19917#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -59,11 +63,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="20" column="29" lean-forward="true" selection-start-line="20" selection-start-column="29" selection-end-line="20" selection-end-column="29" />
+            <state relative-caret-position="255">
+              <caret line="17" column="21" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1227#1228#0" expanded="true" />
+                <element signature="e#1280#1281#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -72,25 +76,13 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Drive_TeleOp.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
+            <state relative-caret-position="765">
               <caret line="74" column="86" selection-start-line="74" selection-start-column="86" selection-end-line="74" selection-end-column="86" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoFourWheelDrive.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6225">
-              <caret line="415" column="1" selection-start-line="415" selection-start-column="1" selection-end-line="415" selection-end-column="1" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/IMU.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1335">
@@ -134,13 +126,13 @@
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/BasicOpMode_Linear.java" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/TeleOp.java" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOp.java" />
-        <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Driving.java" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/BlueShiftUtil.java" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/IMU.java" />
-        <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoFourWheelDrive.java" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Drive_TeleOp.java" />
+        <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoFourWheelDrive.java" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous.java" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Driving.java" />
       </list>
     </option>
   </component>
@@ -165,6 +157,69 @@
               <item name="SkyStone" type="b2602c69:ProjectViewProjectNode" />
               <item name="SkyStone" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="DogeCV" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SkyStone" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SkyStone" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="DogeCV" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SkyStone" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SkyStone" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="DogeCV" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SkyStone" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SkyStone" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="DogeCV" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SkyStone" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SkyStone" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="DogeCV" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SkyStone" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SkyStone" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="DogeCV" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+              <item name="disnodeteam" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SkyStone" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SkyStone" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="DogeCV" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+              <item name="disnodeteam" type="462c0819:PsiDirectoryNode" />
+              <item name="dogecv" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SkyStone" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SkyStone" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="DogeCV" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+              <item name="disnodeteam" type="462c0819:PsiDirectoryNode" />
+              <item name="dogecv" type="462c0819:PsiDirectoryNode" />
+              <item name="detectors" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="SkyStone" type="b2602c69:ProjectViewProjectNode" />
@@ -520,13 +575,54 @@
       <option name="project" value="LOCAL" />
       <updated>1573594675796</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="v 0.1.0&#10;&#10;Improved turning and encoder code.">
+      <created>1573669547610</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1573669547612</updated>
+    </task>
+    <task id="LOCAL-00023" summary="v 0.1.0&#10;&#10;Dedication">
+      <created>1573672896462</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1573672896462</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
+      <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.26680973" />
+      <window_info id="Structure" order="2" side_tool="true" />
+      <window_info id="Build Variants" order="3" side_tool="true" />
+      <window_info id="Image Layers" order="4" />
+      <window_info id="Designer" order="5" />
+      <window_info id="Capture Tool" order="6" />
+      <window_info id="Resources Explorer" order="7" />
+      <window_info id="Favorites" order="8" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="0" sideWeight="0.49928468" weight="0.22289157" />
+      <window_info anchor="bottom" id="TODO" order="1" />
+      <window_info anchor="bottom" id="Terminal" order="2" />
+      <window_info anchor="bottom" id="Event Log" order="3" sideWeight="0.50429183" side_tool="true" weight="0.036144577" />
+      <window_info anchor="bottom" id="Build" order="4" sideWeight="0.49570817" weight="0.036144577" />
+      <window_info anchor="bottom" id="Logcat" order="5" />
+      <window_info anchor="bottom" id="Android Profiler" order="6" />
+      <window_info anchor="bottom" id="Run" order="7" sideWeight="0.49713877" weight="0.036144577" />
+      <window_info anchor="bottom" id="Debug" order="8" />
+      <window_info anchor="bottom" id="Find" order="9" sideWeight="0.49928468" weight="0.036144577" />
+      <window_info anchor="right" id="Assistant" weight="0.3297568" />
+      <window_info anchor="right" id="Capture Analysis" order="0" />
+      <window_info anchor="right" id="Gradle" order="1" weight="0.3297568" />
+      <window_info anchor="right" id="Theme Preview" order="2" />
+      <window_info anchor="right" id="Palette&#9;" order="3" />
+      <window_info anchor="right" id="Device File Explorer" order="4" side_tool="true" />
+    </layout>
+    <layout-to-restore>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
       <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.26680973" />
       <window_info id="Structure" order="2" side_tool="true" />
@@ -546,13 +642,13 @@
       <window_info anchor="bottom" id="Run" order="7" sideWeight="0.49713877" weight="0.036144577" />
       <window_info anchor="bottom" id="Debug" order="8" />
       <window_info anchor="bottom" id="Find" order="9" sideWeight="0.49928468" weight="0.036144577" />
-      <window_info anchor="right" id="Assistant" weight="0.3297568" />
-      <window_info anchor="right" id="Capture Analysis" order="0" />
-      <window_info anchor="right" id="Gradle" order="1" weight="0.3297568" />
-      <window_info anchor="right" id="Theme Preview" order="2" />
-      <window_info anchor="right" id="Palette&#9;" order="3" />
-      <window_info anchor="right" id="Device File Explorer" order="4" side_tool="true" />
-    </layout>
+      <window_info anchor="right" id="Assistant" order="0" weight="0.3297568" />
+      <window_info anchor="right" id="Capture Analysis" order="1" />
+      <window_info anchor="right" id="Gradle" order="2" weight="0.3297568" />
+      <window_info anchor="right" id="Theme Preview" order="3" />
+      <window_info anchor="right" id="Palette&#9;" order="4" />
+      <window_info anchor="right" id="Device File Explorer" order="5" side_tool="true" />
+    </layout-to-restore>
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.md" />
@@ -606,7 +702,9 @@
     <MESSAGE value="v 0.1.0&#10;&#10;Added code from last year into this year's repository and changed variable names." />
     <MESSAGE value="v 0.1.0&#10;&#10;Added IMU code so that we can use the IMU to turn a specific number of degrees." />
     <MESSAGE value="v 0.1.0&#10;&#10;Testing Encoder Drive and IMU turning." />
-    <option name="LAST_COMMIT_MESSAGE" value="v 0.1.0&#10;&#10;Testing Encoder Drive and IMU turning." />
+    <MESSAGE value="v 0.1.0&#10;&#10;Improved turning and encoder code." />
+    <MESSAGE value="v 0.1.0&#10;&#10;Dedication" />
+    <option name="LAST_COMMIT_MESSAGE" value="v 0.1.0&#10;&#10;Dedication" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Test.java" />
@@ -638,13 +736,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" selection-start-line="24" selection-end-line="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/DogeCV/src/main/java/com.disnodeteam.dogecv/ActivityViewDisplay.java">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -662,45 +753,57 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Driving.java">
+    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/IMU.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="40" column="58" selection-start-line="40" selection-start-column="58" selection-end-line="40" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="29" lean-forward="true" selection-start-line="20" selection-start-column="29" selection-end-line="20" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1227#1228#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="1335">
+          <caret line="103" column="1" selection-start-line="103" selection-start-column="1" selection-end-line="103" selection-end-column="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Drive_TeleOp.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
+        <state relative-caret-position="765">
           <caret line="74" column="86" selection-start-line="74" selection-start-column="86" selection-end-line="74" selection-end-column="86" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="21" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1280#1281#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoFourWheelDrive.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6225">
-          <caret line="415" column="1" selection-start-line="415" selection-start-column="1" selection-end-line="415" selection-end-column="1" />
+        <state relative-caret-position="450">
+          <caret line="46" column="20" lean-forward="true" selection-start-line="46" selection-start-column="20" selection-end-line="46" selection-end-column="20" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#19873#19874#0" expanded="true" />
+            <element signature="e#19916#19917#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/IMU.java">
+    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Driving.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1335">
-          <caret line="103" column="1" selection-start-line="103" selection-start-column="1" selection-end-line="103" selection-end-column="1" />
+        <state relative-caret-position="483">
+          <caret line="77" column="53" lean-forward="true" selection-start-line="77" selection-start-column="53" selection-end-line="77" selection-end-column="53" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -56,6 +57,7 @@ public class Driving extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
+    private ColorSensor color_sensor;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -63,7 +65,7 @@ public class Driving extends OpMode {
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
-
+        color_sensor = this.hardwareMap.colorSensor.get("ColorSensor");
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
