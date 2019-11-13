@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -23,6 +24,9 @@ public class AutoFourWheelDrive {
 
     //IMU
     private IMU imu;
+
+    //Color Sensor
+    private ColorSensor color_sensor;
 
     //Instance Variables
     private boolean hasAborted;
@@ -44,8 +48,9 @@ public class AutoFourWheelDrive {
     private static final float  ENCODER_DRIVE_POWER_OFFSET_STEP = (float)0.013;
     private static final int    ENCODER_NO_MOVEMENT_THRESHOLD = 12;
 
-    public AutoFourWheelDrive(LinearOpMode opMode, String motorDriveLeftName, String motorDriveRightName, String IMUName, boolean verboseLoops) {
+    public AutoFourWheelDrive(LinearOpMode opMode, String ColorSensorName, String motorDriveLeftName, String motorDriveRightName, String IMUName, boolean verboseLoops) {
         //Bring in all objects from the OpMode and hardwareMap
+        this.color_sensor = opMode.hardwareMap.colorSensor.get(ColorSensorName);
         this.motorDriveLeftBack = opMode.hardwareMap.get(DcMotor.class, motorDriveLeftName + "Back");
         this.motorDriveLeftFront = opMode.hardwareMap.get(DcMotor.class, motorDriveLeftName + "Front");
         this.motorDriveRightBack = opMode.hardwareMap.get(DcMotor.class, motorDriveRightName + "Back");
@@ -412,5 +417,9 @@ public class AutoFourWheelDrive {
 
         motorDriveRightFront.setPower(-power);
         motorDriveLeftBack.setPower(-power);
+    }
+
+    public void color_value () {
+        telemetry.addData("Value:",color_sensor.alpha());
     }
 }

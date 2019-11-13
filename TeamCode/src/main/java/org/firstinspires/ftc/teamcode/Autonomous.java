@@ -13,7 +13,7 @@ public class Autonomous extends LinearOpMode {
     private void initialize() {
         setTelemetryStatus("Initializing");
 
-        autoFourWheelDrive = new AutoFourWheelDrive(this, "motorDriveLeft","motorDriveRight","imu",false);
+        autoFourWheelDrive = new AutoFourWheelDrive(this,"ColorSensor", "motorDriveLeft","motorDriveRight","imu",false);
 
         setTelemetryStatus("Initialized");
     }
@@ -27,6 +27,8 @@ public class Autonomous extends LinearOpMode {
         autoFourWheelDrive.turn(45, 6);
 
         autoFourWheelDrive.encoderDrive(10,10);
+
+        autoFourWheelDrive.color_value();
 
         setTelemetryStatus("Turning");
     }
