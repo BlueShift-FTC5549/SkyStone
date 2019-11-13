@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AutoFourWheelDrive {
@@ -42,6 +43,36 @@ public class AutoFourWheelDrive {
     private static final int    ENCODER_DRIVE_ERROR_ALLOWANCE = 200;
     private static final float  ENCODER_DRIVE_POWER_OFFSET_STEP = (float)0.013;
     private static final int    ENCODER_NO_MOVEMENT_THRESHOLD = 12;
+
+    public AutoFourWheelDrive(LinearOpMode opMode, String motorDriveLeftName, String motorDriveRightName, String IMUName, boolean verboseLoops) {
+        //Bring in all objects from the OpMode and hardwareMap
+        this.motorDriveLeftBack = opMode.hardwareMap.get(DcMotor.class, motorDriveLeftName + "Back");
+        this.motorDriveLeftFront = opMode.hardwareMap.get(DcMotor.class, motorDriveLeftName + "Front");
+        this.motorDriveRightBack = opMode.hardwareMap.get(DcMotor.class, motorDriveRightName + "Back");
+        this.motorDriveRightFront = opMode.hardwareMap.get(DcMotor.class, motorDriveRightName + "Front");
+        this.imu = new IMU(opMode.telemetry, opMode.hardwareMap, IMUName);
+
+        this.telemetry = opMode.telemetry;
+        this.opMode = opMode;
+
+        this.hasAborted = false;
+        this.verboseLoops = verboseLoops;
+        this.headingStorage = new ArrayList<>();
+
+
+        //Motor Calibration (Direction and Zero Power Behavior)
+        motorDriveLeftBack.setDirection(DcMotor.Direction.FORWARD);
+        motorDriveLeftFront.setDirection(DcMotor.Direction.FORWARD);
+        motorDriveRightBack.setDirection(DcMotor.Direction.REVERSE);
+        motorDriveRightFront.setDirection(DcMotor.Direction.REVERSE);
+
+        motorDriveLeftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //TODO: Decide whether to brake or not
+        motorDriveLeftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorDriveRightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorDriveRightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        resetEncoders();
+    }
 
     public void turn(float dTheta, double secondsTimeout) {
         hasAborted = false;
