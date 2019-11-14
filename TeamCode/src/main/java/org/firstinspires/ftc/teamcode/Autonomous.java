@@ -1,13 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Autonomous",group = "Autonomous")
 public class Autonomous extends LinearOpMode {
-    private ElapsedTime runtime = new ElapsedTime();
-
     private AutoFourWheelDrive autoFourWheelDrive;
 
     private void initialize() {
@@ -27,8 +23,6 @@ public class Autonomous extends LinearOpMode {
         autoFourWheelDrive.turn(45, 6);
 
         autoFourWheelDrive.encoderDrive(10,10);
-
-        autoFourWheelDrive.color_value();
 
         setTelemetryStatus("Turning");
     }

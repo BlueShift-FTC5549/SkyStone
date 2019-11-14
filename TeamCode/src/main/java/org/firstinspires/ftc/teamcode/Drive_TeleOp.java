@@ -25,6 +25,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="TeleOP", group="Main")
@@ -91,28 +92,6 @@ public class Drive_TeleOp extends OpMode {
         motorDriveRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-        //Set auxiliary motors parameters
-        motorBucket.setDirection(DcMotor.Direction.FORWARD);
-        motorFlipper.setDirection(DcMotor.Direction.FORWARD);
-        motorLift.setDirection(DcMotor.Direction.FORWARD);
-        motorSlider.setDirection(DcMotor.Direction.FORWARD);
-
-        motorBucket.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorFlipper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorSlider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        motorBucket.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorFlipper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorSlider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        motorBucket.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorFlipper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorSlider.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -129,23 +108,48 @@ public class Drive_TeleOp extends OpMode {
 
     @Override public void loop() {
         //Driving Code
-        double speed = Math.sqrt(2) * Math.pow(Math.pow(gamepad1.left_stick_x, 4) + Math.pow(gamepad1.left_stick_y, 4), 0.5);
-        double angle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x);
-        double rotation = Math.signum(gamepad1.right_stick_x) * Math.pow(gamepad1.right_stick_x, 2);
-
-        float primaryDiagonalSpeed = (float) (speed * Math.sin(angle - (Math.PI / 4.0)));
-        float secondaryDiagonalSpeed = (float) (speed * Math.cos(angle - (Math.PI / 4.0)));
-
-        motorDriveLeftBack.setPower(secondaryDiagonalSpeed - rotation);
-        motorDriveRightFront.setPower(secondaryDiagonalSpeed + rotation);
-        motorDriveLeftFront.setPower(primaryDiagonalSpeed - rotation);
-        motorDriveRightBack.setPower(primaryDiagonalSpeed + rotation);
+        if (gamepad1.right_stick_y > 0) {
+            setPower(1);
+        }
+        else if (gamepad1.right_stick_y < 0){
+            setPower(-1);
+        }
+        else if (gamepad1.right_stick_x > 0) {
+            strafe(1);
+        }
+        else if (gamepad1.right_stick_x < 0) {
+            strafe(-1);
+        }
+        else if (gamepad1.left_stick_x > 0) {
+            setSplitPower(-1);
+        }
+        else if (gamepad1.left_stick_x < 0) {
+            setSplitPower(1);
+        }
+        else {
+            setPower(0);
+        }
     }
 
-    @Override public void stop() {
-        motorDriveLeftBack.setPower(0);
-        motorDriveLeftFront.setPower(0);
-        motorDriveRightBack.setPower(0);
-        motorDriveRightFront.setPower(0);
+    public void setSplitPower(double power) {
+        motorDriveLeftBack.setPower(power);
+        motorDriveLeftFront.setPower(power);
+        motorDriveRightBack.setPower(-power);
+        motorDriveRightFront.setPower(-power);
+    }
+
+    public void strafe(double power) {
+        motorDriveLeftFront.setPower(power);
+        motorDriveRightBack.setPower(power);
+
+        motorDriveRightFront.setPower(-power);
+        motorDriveLeftBack.setPower(-power);
+    }
+
+    public void setPower (double power){
+        motorDriveLeftBack.setPower(power);
+        motorDriveLeftFront.setPower(power);
+        motorDriveRightBack.setPower(power);
+        motorDriveRightFront.setPower(power);
     }
 }
