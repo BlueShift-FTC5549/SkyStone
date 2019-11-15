@@ -48,9 +48,9 @@ public class AutoFourWheelDrive {
     private static final float  ENCODER_DRIVE_POWER_OFFSET_STEP = (float)0.013;
     private static final int    ENCODER_NO_MOVEMENT_THRESHOLD = 12;
 
-    public AutoFourWheelDrive(LinearOpMode opMode, String ColorSensorName, String motorDriveLeftName, String motorDriveRightName, String IMUName, boolean verboseLoops) {
+    public AutoFourWheelDrive(LinearOpMode opMode, String motorDriveLeftName, String motorDriveRightName, String IMUName, boolean verboseLoops) {
         //Bring in all objects from the OpMode and hardwareMap
-        this.color_sensor = opMode.hardwareMap.colorSensor.get(ColorSensorName);
+        //this.color_sensor = opMode.hardwareMap.colorSensor.get(ColorSensorName);
         this.motorDriveLeftBack = opMode.hardwareMap.get(DcMotor.class, motorDriveLeftName + "Back");
         this.motorDriveLeftFront = opMode.hardwareMap.get(DcMotor.class, motorDriveLeftName + "Front");
         this.motorDriveRightBack = opMode.hardwareMap.get(DcMotor.class, motorDriveRightName + "Back");
@@ -63,7 +63,6 @@ public class AutoFourWheelDrive {
         this.hasAborted = false;
         this.verboseLoops = verboseLoops;
         this.headingStorage = new ArrayList<>();
-
 
         //Motor Calibration (Direction and Zero Power Behavior)
         motorDriveLeftBack.setDirection(DcMotor.Direction.FORWARD);

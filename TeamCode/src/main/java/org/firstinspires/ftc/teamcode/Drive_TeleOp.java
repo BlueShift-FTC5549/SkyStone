@@ -36,34 +36,6 @@ public class Drive_TeleOp extends OpMode {
     private DcMotor motorDriveRightBack;
     private DcMotor motorDriveRightFront;
 
-    private DcMotor motorBucket;
-    private DcMotor motorFlipper;
-    private DcMotor motorLift;
-    private DcMotor motorSlider;
-
-    private CRServo servoSweeper;
-
-
-    //Arm Deployment Constants
-    private static final int SLIDER_HOME_ENCODER_VALUE     = -1900;
-    private static final int SLIDER_DEPLOYED_ENCODER_VALUE = -3200;
-    private static final float SLIDER_MOVEMENT_POWER = -0.6f;
-
-    private static final int BUCKET_HOME_ENCODER_VALUE     = -63;
-    private static final int BUCKET_DEPLOYED_ENCODER_VALUE = -420;
-    private static final float BUCKET_MOVEMENT_POWER = -0.23f;
-
-    private static final int FLIPPER_HOME_ENCODER_VALUE    = 0;
-    private static final int FLIPPER_DEPLOYED_ENCODER_VALUE = 950;
-    private static final float FLIPPER_MOVEMENT_POWER = 0.5f;
-
-
-    //Driving constants and variables
-    private static final float SERVO_MAX_POWER = 0.8f;
-
-    private boolean manualControl = false;
-
-
     @Override public void init() {
         telemetry.clearAll();
         telemetry.addData("Status", "TeleOP Initialization In Progress");
@@ -108,29 +80,42 @@ public class Drive_TeleOp extends OpMode {
 
     @Override public void loop() {
         //Driving Code
-        if (gamepad1.right_stick_y > 0) {
-            setPower(1);
+
+        double speed = Math.sqrt(2) * Math.pow(Math.pow(gamepad1.left_stick_x, 4) + Math.pow(gamepad1.left_stick_y, 4), 0.5);
+        double angle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x);
+        double rotation = Math.signum(gamepad1.right_stick_x) * Math.pow(gamepad1.right_stick_x, 2);
+
+        float primaryDiagonalSpeed = (float) (speed * Math.sin(angle - (Math.PI / 4.0)));
+        float secondaryDiagonalSpeed = (float) (speed * Math.cos(angle - (Math.PI / 4.0)));
+
+        motorDriveLeftBack.setPower(secondaryDiagonalSpeed - rotation);
+        motorDriveRightFront.setPower(secondaryDiagonalSpeed + rotation);
+        motorDriveLeftFront.setPower(primaryDiagonalSpeed - rotation);
+        motorDriveRightBack.setPower(primaryDiagonalSpeed + rotation);
+
+        /*if (gamepad1.right_stick_y > 0.1) {
+            setPower(gamepad1.right_stick_y);
         }
-        else if (gamepad1.right_stick_y < 0){
-            setPower(-1);
+        else if (gamepad1.right_stick_y < -0.1){
+            setPower(gamepad1.right_stick_y);
         }
-        else if (gamepad1.right_stick_x > 0) {
-            strafe(1);
+        else if (gamepad1.right_stick_x > 0.1) {
+            strafe(-gamepad1.right_stick_x);
         }
-        else if (gamepad1.right_stick_x < 0) {
-            strafe(-1);
+        else if (gamepad1.right_stick_x < -0.1) {
+            strafe(-gamepad1.right_stick_x);
         }
-        else if (gamepad1.left_stick_x > 0) {
-            setSplitPower(-1);
+        else if (gamepad1.left_stick_x > 0.1) {
+            setSplitPower(-gamepad1.left_stick_x);
         }
-        else if (gamepad1.left_stick_x < 0) {
-            setSplitPower(1);
+        else if (gamepad1.left_stick_x < -0.1) {
+            setSplitPower(-gamepad1.left_stick_x);
         }
         else {
             setPower(0);
-        }
-    }
+        }*/
 
+    }
     public void setSplitPower(double power) {
         motorDriveLeftBack.setPower(power);
         motorDriveLeftFront.setPower(power);
@@ -141,15 +126,14 @@ public class Drive_TeleOp extends OpMode {
     public void strafe(double power) {
         motorDriveLeftFront.setPower(power);
         motorDriveRightBack.setPower(power);
-
         motorDriveRightFront.setPower(-power);
         motorDriveLeftBack.setPower(-power);
     }
 
     public void setPower (double power){
-        motorDriveLeftBack.setPower(power);
+        motorDriveLeftBack.setPower(-power);
         motorDriveLeftFront.setPower(power);
-        motorDriveRightBack.setPower(power);
+        motorDriveRightBack.setPower(-power);
         motorDriveRightFront.setPower(power);
     }
 }
