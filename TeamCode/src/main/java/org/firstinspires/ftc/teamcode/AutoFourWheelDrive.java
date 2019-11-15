@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -22,21 +22,13 @@ public class AutoFourWheelDrive {
     private LinearOpMode opMode;
     private ElapsedTime elapsedTime = new ElapsedTime();
 
-    //IMU
-    private IMU imu;
-
     //Color Sensor
     private ColorSensor color_sensor;
+    private int block_position;
 
     //Instance Variables
     private boolean hasAborted;
     private boolean verboseLoops;
-    private List<Float> headingStorage;
-
-    //Turning Constants
-    private static final float TURN_Kp = 0.75f;
-    private static final float TURN_ERROR_ALLOWANCE = (float)5; //In Degrees
-    private static final float TURN_POWER_OFFSET_STEP = (float)0.015;
 
     //Encoder Constants
     private static final double COUNTS_PER_MOTOR_REV    = 1120;    // Andymark Neverest 40
@@ -48,21 +40,19 @@ public class AutoFourWheelDrive {
     private static final float  ENCODER_DRIVE_POWER_OFFSET_STEP = (float)0.013;
     private static final int    ENCODER_NO_MOVEMENT_THRESHOLD = 12;
 
-    public AutoFourWheelDrive(LinearOpMode opMode, String motorDriveLeftName, String motorDriveRightName, String IMUName, boolean verboseLoops) {
+    public AutoFourWheelDrive(LinearOpMode opMode, String ColorSensorName, String motorDriveLeftName, String motorDriveRightName, boolean verboseLoops) {
         //Bring in all objects from the OpMode and hardwareMap
-        //this.color_sensor = opMode.hardwareMap.colorSensor.get(ColorSensorName);
+        this.color_sensor = opMode.hardwareMap.colorSensor.get(ColorSensorName);
         this.motorDriveLeftBack = opMode.hardwareMap.get(DcMotor.class, motorDriveLeftName + "Back");
         this.motorDriveLeftFront = opMode.hardwareMap.get(DcMotor.class, motorDriveLeftName + "Front");
         this.motorDriveRightBack = opMode.hardwareMap.get(DcMotor.class, motorDriveRightName + "Back");
         this.motorDriveRightFront = opMode.hardwareMap.get(DcMotor.class, motorDriveRightName + "Front");
-        this.imu = new IMU(opMode.telemetry, opMode.hardwareMap, IMUName);
 
         this.telemetry = opMode.telemetry;
         this.opMode = opMode;
 
         this.hasAborted = false;
         this.verboseLoops = verboseLoops;
-        this.headingStorage = new ArrayList<>();
 
         //Motor Calibration (Direction and Zero Power Behavior)
         motorDriveLeftBack.setDirection(DcMotor.Direction.FORWARD);
@@ -76,83 +66,6 @@ public class AutoFourWheelDrive {
         motorDriveRightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         resetEncoders();
-    }
-
-    public void turn(float dTheta, double secondsTimeout) {
-        hasAborted = false;
-
-        int[] previousEncoders = new int[4];
-        float thetaInit = imu.getHeading();
-        float thetaTarget = (thetaInit + dTheta) % 360;
-        float turningPowerOffset = 0.16f;
-
-        telemetry.addData("Turning", "Starting at " + thetaInit + " degrees");
-        telemetry.update();
-
-        resetEncoders();
-        elapsedTime.reset();
-
-        if (!verboseLoops) {
-            while (Math.abs(thetaTarget - imu.getHeading()) % 360.0 > TURN_ERROR_ALLOWANCE
-                    && opMode.opModeIsActive()
-                    && elapsedTime.seconds() <= secondsTimeout
-                    && !hasAborted
-                    && !opMode.isStopRequested()) {
-
-                int[] currentEncoders = getEncoderValues();
-
-                double thetaCurrent = (double)imu.getHeading();
-
-                double thetaError = BlueShiftUtil.getDegreeDifference(thetaCurrent, thetaTarget);
-                double thetaPercentError = Math.abs(thetaError / dTheta);
-
-                double turnPower = Math.signum(thetaError) * (TURN_Kp * thetaPercentError * (1.0 - thetaPercentError) + turningPowerOffset);
-
-                setTurnPower(turnPower);
-
-                if (!hasAllEncodersMoved(previousEncoders, currentEncoders)) {
-                    turningPowerOffset += thetaPercentError * TURN_POWER_OFFSET_STEP; //TODO: Decide whether or not to make offset proportional
-                }
-
-                previousEncoders = currentEncoders;
-            }
-        } else {
-            while (Math.abs(thetaTarget - imu.getHeading()) % 360.0 > TURN_ERROR_ALLOWANCE
-                    && opMode.opModeIsActive()
-                    && elapsedTime.seconds() <= secondsTimeout
-                    && !hasAborted
-                    && !opMode.isStopRequested()) {
-
-                int[] currentEncoders = getEncoderValues();
-
-                double thetaCurrent = (double)imu.getHeading();
-
-                double thetaError = BlueShiftUtil.getDegreeDifference(thetaCurrent, thetaTarget);
-                double thetaPercentError = Math.abs(thetaError / dTheta);
-
-                double turnPower = Math.signum(thetaError) * (TURN_Kp * thetaPercentError * (1.0 - thetaPercentError) + turningPowerOffset);
-
-                setTurnPower(turnPower);
-
-                if (!hasAllEncodersMoved(previousEncoders, currentEncoders)) {
-                    turningPowerOffset += thetaPercentError * TURN_POWER_OFFSET_STEP;
-                }
-
-                previousEncoders = currentEncoders;
-
-                telemetry.addData("Theta Error", thetaError);
-                telemetry.addData("Percent Error", thetaPercentError);
-                telemetry.addData("Current Heading", thetaCurrent);
-                telemetry.addData("Target Heading", thetaTarget);
-                telemetry.addData("Motor Power", turnPower);
-                telemetry.update();
-            }
-        }
-
-        abortMotion();
-
-        telemetry.addData("Turning", "Complete at " + imu.getHeading() + " degrees");
-        telemetry.update();
     }
     public void encoderStrafe(double targetDistance, double secondsTimeout) {
         hasAborted = false;
@@ -418,7 +331,23 @@ public class AutoFourWheelDrive {
         motorDriveLeftBack.setPower(-power);
     }
 
-    public void color_value () {
-        telemetry.addData("Value:",color_sensor.alpha());
+    public int check_block(int trial) {
+        if (color_sensor.red() < 180){
+            return trial;
+        }
+        else {
+            encoderStrafe(10,10);
+        }
+        return 0;
+    }
+    public int find_block () {
+        block_position = check_block(1);
+        if (block_position == 0) {
+            block_position = check_block(2);
+        }
+        if (block_position == 0){
+            block_position = check_block(3);
+        }
+        return block_position;
     }
 }

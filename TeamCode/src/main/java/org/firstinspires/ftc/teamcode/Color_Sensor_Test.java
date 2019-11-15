@@ -90,11 +90,12 @@ public class Color_Sensor_Test extends OpMode {
     @Override
     public void loop() {
         // Setup a variable for each drive wheel to save power level for telemetry
-        telemetry.addData("Alpha", color_sensor.alpha());
-        telemetry.addData("Argb", color_sensor.argb());
-        telemetry.addData("Red", color_sensor.red());
-        telemetry.addData("Green", color_sensor.green());
-        telemetry.addData("Blue", color_sensor.blue());
+        if (color_sensor.red() < 200) {
+            telemetry.addData("Stone","SkyStone");
+        }
+        else if (color_sensor.red() >200 && color_sensor.red() < 1200) {
+            telemetry.addData("Stone","Regular Stone");
+        }
     }
 
     /*

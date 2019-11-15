@@ -1,16 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Autonomous",group = "Autonomous")
 public class Autonomous extends LinearOpMode {
     private AutoFourWheelDrive autoFourWheelDrive;
+    private int block_position;
 
     private void initialize() {
         setTelemetryStatus("Initializing");
 
-        autoFourWheelDrive = new AutoFourWheelDrive(this,"ColorSensor", "motorDriveLeft","motorDriveRight","imu",false);
+        autoFourWheelDrive = new AutoFourWheelDrive(this,"color_sensor","motorDriveLeft","motorDriveRight",false);
 
         setTelemetryStatus("Initialized");
     }
@@ -18,12 +18,13 @@ public class Autonomous extends LinearOpMode {
     public void runOpMode() {
         initialize();
 
+        waitForStart();
+
         telemetry.clearAll();
 
         //Turn the rest of the angle to be facing away from the lander
-        autoFourWheelDrive.turn(45, 6);
-
-        autoFourWheelDrive.encoderDrive(10,10);
+        autoFourWheelDrive.encoderDrive(-70,10);
+        block_position = autoFourWheelDrive.find_block();
 
         setTelemetryStatus("Turning");
     }
