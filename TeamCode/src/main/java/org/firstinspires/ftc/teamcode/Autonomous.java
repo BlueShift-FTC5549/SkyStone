@@ -26,7 +26,7 @@ public class Autonomous extends LinearOpMode {
         autoFourWheelDrive.encoderDrive(-70,10);
         block_position = autoFourWheelDrive.find_block();
 
-        setTelemetryStatus("Turning");
+        telemetry.addData("Block Position", block_position);
     }
 
     public void setTelemetryStatus(String status) {
