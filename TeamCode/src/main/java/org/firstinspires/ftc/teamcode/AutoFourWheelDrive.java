@@ -35,12 +35,12 @@ public class AutoFourWheelDrive {
     private static final double DRIVE_GEAR_REDUCTION    = 24.0/32.0;     // This is < 1.0 if geared UP
     private static final double WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
     private static final double COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
-    private static final float  ENCODER_DRIVE_Kp        = 0.85f;
+    private static final float  ENCODER_DRIVE_Kp        = 10f;
     private static final int    ENCODER_DRIVE_ERROR_ALLOWANCE = 200;
     private static final float  ENCODER_DRIVE_POWER_OFFSET_STEP = (float)0.013;
     private static final int    ENCODER_NO_MOVEMENT_THRESHOLD = 12;
 
-    public AutoFourWheelDrive(LinearOpMode opMode, String ColorSensorName, String motorDriveLeftName, String motorDriveRightName, boolean verboseLoops) {
+    public AutoFourWheelDrive(LinearOpMode opMode,  String ColorSensorName, String motorDriveLeftName, String motorDriveRightName, boolean verboseLoops) {
         //Bring in all objects from the OpMode and hardwareMap
         this.color_sensor = opMode.hardwareMap.colorSensor.get(ColorSensorName);
         this.motorDriveLeftBack = opMode.hardwareMap.get(DcMotor.class, motorDriveLeftName + "Back");
@@ -100,7 +100,7 @@ public class AutoFourWheelDrive {
 
                 double motorPower = Math.signum(encoderMeanAbsoluteError) * (ENCODER_DRIVE_Kp * percentEncoderError * (1 - percentEncoderError) + ENCODER_DRIVE_POWER_OFFSET);
 
-                strafe(motorPower);
+                strafe(motorPower,motorPower);
 
                 if (!hasAllEncodersMoved(previousEncoders, currentEncoders)) {
                     ENCODER_DRIVE_POWER_OFFSET += ENCODER_DRIVE_POWER_OFFSET_STEP;
@@ -122,7 +122,7 @@ public class AutoFourWheelDrive {
 
                 double motorPower = Math.signum(encoderMeanAbsoluteError) * (ENCODER_DRIVE_Kp * percentEncoderError * (1 - percentEncoderError) + ENCODER_DRIVE_POWER_OFFSET);
 
-                strafe(motorPower);
+                strafe(motorPower,motorPower);
 
                 if (!hasAllEncodersMoved(previousEncoders, currentEncoders)) {
                     ENCODER_DRIVE_POWER_OFFSET += ENCODER_DRIVE_POWER_OFFSET_STEP;
@@ -277,7 +277,7 @@ public class AutoFourWheelDrive {
      *
      * @param power Desired motor power
      */
-    private void setAllPower(double power) {
+    public void setAllPower(double power) {
         motorDriveLeftBack.setPower(power);
         motorDriveLeftFront.setPower(power);
         motorDriveRightBack.setPower(power);
@@ -323,15 +323,16 @@ public class AutoFourWheelDrive {
         return true;
     }
 
-    public void strafe(double power) {
-        motorDriveLeftFront.setPower(power);
-        motorDriveRightBack.setPower(power);
+    public void strafe(double leftpower, double rightpower) {
+        motorDriveLeftFront.setPower(leftpower);
+        motorDriveRightBack.setPower(rightpower);
 
-        motorDriveRightFront.setPower(-power);
-        motorDriveLeftBack.setPower(-power);
+        motorDriveRightFront.setPower(-rightpower);
+        motorDriveLeftBack.setPower(-leftpower);
     }
 
     public int check_block(int trial) {
+        telemetry.addData("Red",color_sensor.red());
         if (color_sensor.red() < 180){
             return trial;
         }
@@ -345,7 +346,7 @@ public class AutoFourWheelDrive {
         if (block_position == 0) {
             block_position = check_block(2);
         }
-        if (block_position == 0){
+        if (block_position == 0) {
             block_position = check_block(3);
         }
         return block_position;

@@ -23,10 +23,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="TeleOP", group="Main")
 public class Drive_TeleOp extends OpMode {
@@ -35,6 +35,8 @@ public class Drive_TeleOp extends OpMode {
     private DcMotor motorDriveLeftFront;
     private DcMotor motorDriveRightBack;
     private DcMotor motorDriveRightFront;
+    private Servo flip_server;
+    private  double  MinPosition = 0, MaxPosition = 1;
 
     @Override public void init() {
         telemetry.clearAll();
@@ -46,6 +48,7 @@ public class Drive_TeleOp extends OpMode {
         motorDriveLeftFront = hardwareMap.get(DcMotor.class,  "motorDriveLeftFront");
         motorDriveRightBack = hardwareMap.get(DcMotor.class,  "motorDriveRightBack");
         motorDriveRightFront = hardwareMap.get(DcMotor.class, "motorDriveRightFront");
+        flip_server = hardwareMap.get(Servo.class, "flip_servo");
 
         // Since one motor is reversed in relation to the other, we must reverse the motor on the right so positive powers mean forward.
         motorDriveLeftBack.setDirection(DcMotor.Direction.FORWARD);
@@ -93,27 +96,13 @@ public class Drive_TeleOp extends OpMode {
         motorDriveLeftFront.setPower(primaryDiagonalSpeed - rotation);
         motorDriveRightBack.setPower(primaryDiagonalSpeed + rotation);
 
-        /*if (gamepad1.right_stick_y > 0.1) {
-            setPower(gamepad1.right_stick_y);
+        if (gamepad1.a == true) {
+            flip_server.setPosition(Range.clip(.5, MinPosition, MaxPosition));
         }
-        else if (gamepad1.right_stick_y < -0.1){
-            setPower(gamepad1.right_stick_y);
+        if (gamepad1.b == true) {
+            flip_server.setPosition(Range.clip(-0.5,0,1));
         }
-        else if (gamepad1.right_stick_x > 0.1) {
-            strafe(-gamepad1.right_stick_x);
-        }
-        else if (gamepad1.right_stick_x < -0.1) {
-            strafe(-gamepad1.right_stick_x);
-        }
-        else if (gamepad1.left_stick_x > 0.1) {
-            setSplitPower(-gamepad1.left_stick_x);
-        }
-        else if (gamepad1.left_stick_x < -0.1) {
-            setSplitPower(-gamepad1.left_stick_x);
-        }
-        else {
-            setPower(0);
-        }*/
+
 
     }
     public void setSplitPower(double power) {

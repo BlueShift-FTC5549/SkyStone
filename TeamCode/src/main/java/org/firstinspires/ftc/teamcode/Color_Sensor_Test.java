@@ -31,7 +31,11 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -51,7 +55,10 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 public class Color_Sensor_Test extends OpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+    private DigitalChannel touch_sensor;
     private ColorSensor color_sensor;
+    private DistanceSensor distance_sensor;
+    private AutoFourWheelDrive autoFourWheelDrive;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -63,7 +70,10 @@ public class Color_Sensor_Test extends OpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        color_sensor  = hardwareMap.colorSensor.get("color_sensor");
+        color_sensor = hardwareMap.colorSensor.get("color_sensor");
+        distance_sensor = hardwareMap.get(DistanceSensor.class,"color_sensor");
+        touch_sensor  = hardwareMap.get(DigitalChannel.class,"touch_sensor");
+        touch_sensor.setMode(DigitalChannel.Mode.INPUT);
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -90,11 +100,16 @@ public class Color_Sensor_Test extends OpMode {
     @Override
     public void loop() {
         // Setup a variable for each drive wheel to save power level for telemetry
-        if (color_sensor.red() < 200) {
-            telemetry.addData("Stone","SkyStone");
+        telemetry.addData("Distance", distance_sensor.getDistance(DistanceUnit.CM));
+        telemetry.addData("Color",color_sensor.red());
+        telemetry.addData("Is Touched",touch_sensor.getState());
+        telemetry.update();
+
+        if (color_sensor.red() < 30) {
+            telemetry.addData("Block","Regular Stone");
         }
-        else if (color_sensor.red() >200 && color_sensor.red() < 1200) {
-            telemetry.addData("Stone","Regular Stone");
+        else {
+            telemetry.addData("Block","SkyStone");
         }
     }
 
