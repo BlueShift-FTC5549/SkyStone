@@ -23,10 +23,11 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="TeleOP", group="Main")
 public class Drive_TeleOp extends OpMode {
@@ -35,7 +36,11 @@ public class Drive_TeleOp extends OpMode {
     private DcMotor motorDriveLeftFront;
     private DcMotor motorDriveRightBack;
     private DcMotor motorDriveRightFront;
-    private Servo flip_server;
+    private DcMotor raiseSweeper;
+    private DcMotor sweeperRight;
+    private DcMotor sweeperLeft;
+    private CRServo extend_servo;
+    private Servo flipper_servo;
     private  double  MinPosition = 0, MaxPosition = 1;
 
     @Override public void init() {
@@ -48,23 +53,30 @@ public class Drive_TeleOp extends OpMode {
         motorDriveLeftFront = hardwareMap.get(DcMotor.class,  "motorDriveLeftFront");
         motorDriveRightBack = hardwareMap.get(DcMotor.class,  "motorDriveRightBack");
         motorDriveRightFront = hardwareMap.get(DcMotor.class, "motorDriveRightFront");
-        flip_server = hardwareMap.get(Servo.class, "flip_servo");
+        raiseSweeper = hardwareMap.get(DcMotor.class,  "raiseSweeper");
+        sweeperRight = hardwareMap.get(DcMotor.class,  "sweeperRight");
+        sweeperLeft = hardwareMap.get(DcMotor.class, "sweeperLeft");
+        extend_servo = hardwareMap.get(CRServo.class,"extend_servo");
+        flipper_servo = hardwareMap.get(Servo.class, "flipper_servo");
+        //flip_server = hardwareMap.get(Servo.class, "flip_servo");
 
         // Since one motor is reversed in relation to the other, we must reverse the motor on the right so positive powers mean forward.
         motorDriveLeftBack.setDirection(DcMotor.Direction.FORWARD);
-        motorDriveLeftFront.setDirection(DcMotor.Direction.FORWARD);
-        motorDriveRightBack.setDirection(DcMotor.Direction.REVERSE);
+        motorDriveLeftFront.setDirection(DcMotor.Direction.REVERSE);
+        motorDriveRightBack.setDirection(DcMotor.Direction.FORWARD);
         motorDriveRightFront.setDirection(DcMotor.Direction.REVERSE);
 
         motorDriveLeftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorDriveLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorDriveRightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorDriveRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        raiseSweeper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         motorDriveLeftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorDriveLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorDriveRightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorDriveRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        raiseSweeper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         // Tell the driver that initialization is complete.
@@ -86,29 +98,64 @@ public class Drive_TeleOp extends OpMode {
 
         double speed = Math.sqrt(2) * Math.pow(Math.pow(gamepad1.left_stick_x, 4) + Math.pow(gamepad1.left_stick_y, 4), 0.5);
         double angle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x);
-        double rotation = Math.signum(gamepad1.right_stick_x) * Math.pow(gamepad1.right_stick_x, 2);
 
-        float primaryDiagonalSpeed = (float) (speed * Math.sin(angle - (Math.PI / 4.0)));
-        float secondaryDiagonalSpeed = (float) (speed * Math.cos(angle - (Math.PI / 4.0)));
+        float primaryDiagonalSpeed = (float) (speed * Math.sin(angle + (Math.PI / 4.0)));
+        float secondaryDiagonalSpeed = (float) (speed * Math.cos(angle + (Math.PI / 4.0)));
 
-        motorDriveLeftBack.setPower(secondaryDiagonalSpeed - rotation);
-        motorDriveRightFront.setPower(secondaryDiagonalSpeed + rotation);
-        motorDriveLeftFront.setPower(primaryDiagonalSpeed - rotation);
-        motorDriveRightBack.setPower(primaryDiagonalSpeed + rotation);
+        motorDriveLeftBack.setPower(secondaryDiagonalSpeed);
+        motorDriveRightFront.setPower(secondaryDiagonalSpeed);
+        motorDriveLeftFront.setPower(primaryDiagonalSpeed );
+        motorDriveRightBack.setPower(primaryDiagonalSpeed);
 
-        if (gamepad1.a == true) {
+        if (gamepad1.right_stick_x != 0){
+            setSplitPower(-gamepad1.right_stick_x);
+        }
+        /*if (gamepad1.a == true) {
             flip_server.setPosition(Range.clip(.5, MinPosition, MaxPosition));
         }
         if (gamepad1.b == true) {
             flip_server.setPosition(Range.clip(-0.5,0,1));
+        }*/
+
+        if (gamepad1.right_trigger > 0){
+            sweeperRight.setPower(1);
+            sweeperLeft.setPower(-1);
+        }
+        else if (gamepad1.right_bumper) {
+            sweeperRight.setPower(-1);
+            sweeperLeft.setPower(1);
+        }
+        else if (gamepad1.left_trigger > 0) {
+            raiseSweeper.setPower(1);
+        }
+        else if (gamepad1.left_bumper) {
+            raiseSweeper.setPower(-1);
+        }
+        else if (gamepad1.left_trigger ==0) {
+            raiseSweeper.setPower(0);
+            sweeperRight.setPower(0);
+            sweeperLeft.setPower(0);
         }
 
+        if (gamepad2.right_trigger > 0) {
+            extend_servo.setPower(1);
+        }
+        else if (gamepad2.right_trigger == 0) {
+            extend_servo.setPower(0);
+        }
 
+        telemetry.addData("Raise Sweeper Position",raiseSweeper.getCurrentPosition());
+        telemetry.addData("Right X",gamepad1.right_stick_x);
+        telemetry.addData("Right Y",gamepad1.right_stick_y);
+        telemetry.addData("Left X",gamepad1.left_stick_x);
+        telemetry.addData("Left Y",gamepad1.left_stick_y);
+        telemetry.update();
     }
+
     public void setSplitPower(double power) {
         motorDriveLeftBack.setPower(power);
-        motorDriveLeftFront.setPower(power);
-        motorDriveRightBack.setPower(-power);
+        motorDriveLeftFront.setPower(-power);
+        motorDriveRightBack.setPower(power);
         motorDriveRightFront.setPower(-power);
     }
 

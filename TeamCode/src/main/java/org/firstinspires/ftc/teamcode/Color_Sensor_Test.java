@@ -55,7 +55,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class Color_Sensor_Test extends OpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DigitalChannel touch_sensor;
     private ColorSensor color_sensor;
     private DistanceSensor distance_sensor;
     private AutoFourWheelDrive autoFourWheelDrive;
@@ -72,14 +71,12 @@ public class Color_Sensor_Test extends OpMode {
         // step (using the FTC Robot Controller app on the phone).
         color_sensor = hardwareMap.colorSensor.get("color_sensor");
         distance_sensor = hardwareMap.get(DistanceSensor.class,"color_sensor");
-        touch_sensor  = hardwareMap.get(DigitalChannel.class,"touch_sensor");
-        touch_sensor.setMode(DigitalChannel.Mode.INPUT);
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
     }
 
-    /*
+    /*`
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
     @Override
@@ -102,15 +99,14 @@ public class Color_Sensor_Test extends OpMode {
         // Setup a variable for each drive wheel to save power level for telemetry
         telemetry.addData("Distance", distance_sensor.getDistance(DistanceUnit.CM));
         telemetry.addData("Color",color_sensor.red());
-        telemetry.addData("Is Touched",touch_sensor.getState());
         telemetry.update();
 
-        if (color_sensor.red() < 30) {
+        /*if (color_sensor.red() < 30) {
             telemetry.addData("Block","Regular Stone");
         }
         else {
             telemetry.addData("Block","SkyStone");
-        }
+        }*/
     }
 
     /*

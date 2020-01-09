@@ -1,13 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +20,15 @@ public class AutoFourWheelDrive {
     private DcMotor motorDriveLeftFront;
     private DcMotor motorDriveRightBack;
     private DcMotor motorDriveRightFront;
+    private DcMotor raiseSweeper;
+
+    //Servos
+    private Servo flip_servo;
+    private Servo arm_flipper;
+    private CRServo extintion_servo;
+
+    //IMU
+    private IMU imu;
 
     //Important Objects to Manipulate
     private Telemetry telemetry;
@@ -26,33 +39,33 @@ public class AutoFourWheelDrive {
     private ColorSensor color_sensor;
     private int block_position;
 
-    //Instance Variables
-    private boolean hasAborted;
-    private boolean verboseLoops;
-
     //Encoder Constants
     private static final double COUNTS_PER_MOTOR_REV    = 1120;    // Andymark Neverest 40
-    private static final double DRIVE_GEAR_REDUCTION    = 24.0/32.0;     // This is < 1.0 if geared UP
+    private static final double DRIVE_GEAR_REDUCTION    = 1.0;     // This is < 1.0 if geared UP
     private static final double WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
     private static final double COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
-    private static final float  ENCODER_DRIVE_Kp        = 10f;
-    private static final int    ENCODER_DRIVE_ERROR_ALLOWANCE = 200;
-    private static final float  ENCODER_DRIVE_POWER_OFFSET_STEP = (float)0.013;
     private static final int    ENCODER_NO_MOVEMENT_THRESHOLD = 12;
+    private static final double MINIMUM_SPEED = 0.3;
+    private static final double ENCODER_STRAFE_Kp = 0.35;
+    private static final double SCALE_FACTOR = 55.0/52.0;
 
-    public AutoFourWheelDrive(LinearOpMode opMode,  String ColorSensorName, String motorDriveLeftName, String motorDriveRightName, boolean verboseLoops) {
+    //Turning Constants
+    private static final float TURN_Kp = 0.75f;
+    private static final float TURN_ERROR_ALLOWANCE = (float)5; //In Degrees
+    private static final float TURN_POWER_OFFSET_STEP = (float)0.015;
+
+    public AutoFourWheelDrive(LinearOpMode opMode,  String ColorSensorName, String motorDriveLeftName, String motorDriveRightName, String IMUName) {
         //Bring in all objects from the OpMode and hardwareMap
         this.color_sensor = opMode.hardwareMap.colorSensor.get(ColorSensorName);
         this.motorDriveLeftBack = opMode.hardwareMap.get(DcMotor.class, motorDriveLeftName + "Back");
         this.motorDriveLeftFront = opMode.hardwareMap.get(DcMotor.class, motorDriveLeftName + "Front");
         this.motorDriveRightBack = opMode.hardwareMap.get(DcMotor.class, motorDriveRightName + "Back");
         this.motorDriveRightFront = opMode.hardwareMap.get(DcMotor.class, motorDriveRightName + "Front");
+        this.raiseSweeper = opMode.hardwareMap.get(DcMotor.class, "raiseSweeper");
+        this.imu = new IMU(opMode.telemetry, opMode.hardwareMap, IMUName);
 
         this.telemetry = opMode.telemetry;
         this.opMode = opMode;
-
-        this.hasAborted = false;
-        this.verboseLoops = verboseLoops;
 
         //Motor Calibration (Direction and Zero Power Behavior)
         motorDriveLeftBack.setDirection(DcMotor.Direction.FORWARD);
@@ -67,80 +80,74 @@ public class AutoFourWheelDrive {
 
         resetEncoders();
     }
-    public void encoderStrafe(double targetDistance, double secondsTimeout) {
-        hasAborted = false;
 
-        //Reset encoder values to zero
-        resetEncoders();
+    public void turn(float dTheta) {
 
-        //Find desired encoder value and initialize placeholder array
-        int[] currentEncoders = getEncoderValues();
         int[] previousEncoders = new int[4];
-        int encoderTarget = (int)(targetDistance * COUNTS_PER_INCH);
-        double ENCODER_DRIVE_POWER_OFFSET = 0.18;
+        float thetaInit = imu.getHeading();
+        float thetaTarget = (thetaInit + dTheta) % 360;
+        float turningPowerOffset = 0.16f;
 
-        //Telemetry Information
-        telemetry.addData("Encoder Driving", "Starting at %7d : %7d", motorDriveLeftBack.getCurrentPosition(), motorDriveRightBack.getCurrentPosition());
+        telemetry.addData("Turning", "Starting at " + thetaInit + " degrees");
         telemetry.update();
 
-        //Set the current time to zero
+        resetEncoders();
         elapsedTime.reset();
+        while (Math.abs(thetaTarget - imu.getHeading()) % 360.0 > TURN_ERROR_ALLOWANCE
+                && opMode.opModeIsActive()
+                && !opMode.isStopRequested()) {
 
-        if (!verboseLoops) {
-            while (elapsedTime.seconds() <= secondsTimeout
-                    && (Math.abs(BlueShiftUtil.modifiedMeanAbsoluteError(currentEncoders, encoderTarget)) - encoderTarget) > ENCODER_DRIVE_ERROR_ALLOWANCE
-                    && opMode.opModeIsActive()
-                    && !hasAborted
-                    && !opMode.isStopRequested()) {
+            int[] currentEncoders = getEncoderValues();
 
-                currentEncoders = getEncoderValues();
+            double thetaCurrent = (double)imu.getHeading();
 
-                double encoderMeanAbsoluteError = BlueShiftUtil.modifiedMeanAbsoluteError(currentEncoders, encoderTarget);
-                float percentEncoderError = (float) Range.clip(Math.abs((float)encoderMeanAbsoluteError / (float)encoderTarget), 0.0, 1.0);
+            double thetaError = BlueShiftUtil.getDegreeDifference(thetaCurrent, thetaTarget);
+            double thetaPercentError = Math.abs(thetaError / dTheta);
 
-                double motorPower = Math.signum(encoderMeanAbsoluteError) * (ENCODER_DRIVE_Kp * percentEncoderError * (1 - percentEncoderError) + ENCODER_DRIVE_POWER_OFFSET);
+            double turnPower = Math.signum(thetaError) * (TURN_Kp * thetaPercentError * (1.0 - thetaPercentError) + turningPowerOffset);
 
-                strafe(motorPower,motorPower);
+            setTurnPower(turnPower);
 
-                if (!hasAllEncodersMoved(previousEncoders, currentEncoders)) {
-                    ENCODER_DRIVE_POWER_OFFSET += ENCODER_DRIVE_POWER_OFFSET_STEP;
-                }
-
-                previousEncoders = currentEncoders;
+            if (!hasAllEncodersMoved(previousEncoders, currentEncoders)) {
+                turningPowerOffset += thetaPercentError * TURN_POWER_OFFSET_STEP;
             }
-        } else {
-            while (elapsedTime.seconds() <= secondsTimeout
-                    && Math.abs(BlueShiftUtil.modifiedMeanAbsoluteError(currentEncoders, encoderTarget)) > ENCODER_DRIVE_ERROR_ALLOWANCE
-                    && opMode.opModeIsActive()
-                    && !hasAborted
-                    && !opMode.isStopRequested()) {
 
-                currentEncoders = getEncoderValues();
+            previousEncoders = currentEncoders;
 
-                double encoderMeanAbsoluteError = BlueShiftUtil.modifiedMeanAbsoluteError(currentEncoders, encoderTarget);
-                float percentEncoderError = (float)Range.clip(Math.abs((float)encoderMeanAbsoluteError / (float)encoderTarget), 0.0, 1.0);
-
-                double motorPower = Math.signum(encoderMeanAbsoluteError) * (ENCODER_DRIVE_Kp * percentEncoderError * (1 - percentEncoderError) + ENCODER_DRIVE_POWER_OFFSET);
-
-                strafe(motorPower,motorPower);
-
-                if (!hasAllEncodersMoved(previousEncoders, currentEncoders)) {
-                    ENCODER_DRIVE_POWER_OFFSET += ENCODER_DRIVE_POWER_OFFSET_STEP;
-                }
-
-                previousEncoders = currentEncoders;
-
-                telemetry.addData("Front Encoders", "(%7d):(%7d)", motorDriveLeftFront.getCurrentPosition(), motorDriveRightFront.getCurrentPosition());
-                telemetry.addData("Back Encoders", "(%7d):(%7d)", motorDriveLeftBack.getCurrentPosition(), motorDriveRightBack.getCurrentPosition());
-                telemetry.addLine()
-                        .addData("Encoder Target ", encoderTarget + "\n")
-                        .addData("Encoder MAE", encoderMeanAbsoluteError + "\n")
-                        .addData("Percent Errors", percentEncoderError + "\n")
-                        .addData("Power", motorPower + "\n");
-                telemetry.update();
-            }
+            telemetry.addData("Theta Error", thetaError);
+            telemetry.addData("Percent Error", thetaPercentError);
+            telemetry.addData("Current Heading", thetaCurrent);
+            telemetry.addData("Target Heading", thetaTarget);
+            telemetry.addData("Motor Power", turnPower);
+            telemetry.update();
         }
 
+        abortMotion();
+
+        telemetry.addData("Turning", "Complete at " + imu.getHeading() + " degrees");
+        telemetry.update();
+    }
+    public void encoderStrafe(double targetDistance) {
+        resetEncoders();
+        int factor = 1;
+        if (Math.abs(targetDistance) != targetDistance){
+            factor = -1;
+        }
+        double speed = 0;
+        double  encodertarget = Math.abs(targetDistance * COUNTS_PER_INCH)* SCALE_FACTOR;
+        while (checkEncoders(encodertarget) && opMode.opModeIsActive() && !opMode.isStopRequested()) {
+            if (averageEncoderValue() < encodertarget*ENCODER_STRAFE_Kp){
+                speed = factor*(averageEncoderValue()*(1.0-MINIMUM_SPEED)/(encodertarget*ENCODER_STRAFE_Kp) + MINIMUM_SPEED);
+            }
+            else if (averageEncoderValue() > encodertarget*(1.0-ENCODER_STRAFE_Kp)) {
+                speed = factor*((encodertarget-averageEncoderValue()) * (1.0-MINIMUM_SPEED)/(encodertarget*ENCODER_STRAFE_Kp) + MINIMUM_SPEED);
+            }
+            else if (averageEncoderValue() > encodertarget*ENCODER_STRAFE_Kp
+                    && averageEncoderValue() < encodertarget*(1.0-ENCODER_STRAFE_Kp)){
+                speed = factor;
+            }
+            strafe(speed,speed);
+        }
         //Stop the robot and terminate any loops running
         abortMotion();
 
@@ -152,91 +159,31 @@ public class AutoFourWheelDrive {
      * Drive the robot to a certain encoder value on the drive train motors.
      *
      * @param targetDistance The distance in inches to travel
-     * @param secondsTimeout The maximum seconds to run the loop
      */
-    public void encoderDrive(double targetDistance, double secondsTimeout) {
-        hasAborted = false;
-
-        //Reset encoder values to zero
+    public void encoderDrive(double targetDistance) {
         resetEncoders();
-
-        //Find desired encoder value and initialize placeholder array
-        int[] previousEncoders = new int[4];
-        int encoderTarget = (int)(targetDistance * COUNTS_PER_INCH);
-        double ENCODER_DRIVE_POWER_OFFSET = 0.15;
-
-        //Telemetry Information
-        telemetry.addData("Encoder Driving", "Starting at %7d : %7d", motorDriveLeftBack.getCurrentPosition(), motorDriveRightBack.getCurrentPosition());
-        telemetry.update();
-
-        //Set the current time to zero
-        elapsedTime.reset();
-
-        if (!verboseLoops) {
-            while (elapsedTime.seconds() <= secondsTimeout
-                    && (Math.abs(motorDriveLeftBack.getCurrentPosition() - encoderTarget) > ENCODER_DRIVE_ERROR_ALLOWANCE
-                    || Math.abs(motorDriveRightBack.getCurrentPosition() - encoderTarget) > ENCODER_DRIVE_ERROR_ALLOWANCE)
-                    && opMode.opModeIsActive()
-                    && !hasAborted
-                    && !opMode.isStopRequested()) {
-
-                int[] currentEncoders = getEncoderValues();
-
-                int motorDriveLeftEncoderError = encoderTarget - motorDriveLeftBack.getCurrentPosition();
-                int motorDriveRightEncoderError = encoderTarget - motorDriveRightBack.getCurrentPosition();
-                double motorDriveLeftPercentEncoderError = (double)(motorDriveLeftEncoderError) / (double)encoderTarget;
-                double motorDriveRightPercentEncoderError = (double)(motorDriveRightEncoderError) / (double)encoderTarget;
-
-                double motorDriveLeftPower = Math.signum(motorDriveLeftEncoderError) * (ENCODER_DRIVE_Kp * Math.abs(motorDriveLeftPercentEncoderError) * (1 - Math.abs(motorDriveLeftPercentEncoderError)) + ENCODER_DRIVE_POWER_OFFSET);
-                double motorDriveRightPower = Math.signum(motorDriveRightEncoderError) * (ENCODER_DRIVE_Kp * Math.abs(motorDriveRightPercentEncoderError) * (1 - Math.abs(motorDriveRightPercentEncoderError)) + ENCODER_DRIVE_POWER_OFFSET);
-
-                setSplitPower(motorDriveLeftPower, motorDriveRightPower);
-
-                if (!hasAllEncodersMoved(previousEncoders, currentEncoders)) {
-                    ENCODER_DRIVE_POWER_OFFSET += (motorDriveLeftPercentEncoderError + motorDriveRightPercentEncoderError)/2.0 * ENCODER_DRIVE_POWER_OFFSET_STEP;
-                }
-
-                previousEncoders = currentEncoders;
-            }
-        } else {
-            while (elapsedTime.seconds() <= secondsTimeout
-                    && (Math.abs(motorDriveLeftBack.getCurrentPosition() - encoderTarget) > ENCODER_DRIVE_ERROR_ALLOWANCE
-                    || Math.abs(motorDriveRightBack.getCurrentPosition() - encoderTarget) > ENCODER_DRIVE_ERROR_ALLOWANCE)
-                    && opMode.opModeIsActive()
-                    && !hasAborted
-                    && !opMode.isStopRequested()) {
-
-                int[] currentEncoders = getEncoderValues();
-
-                int motorDriveLeftEncoderError = encoderTarget - motorDriveLeftBack.getCurrentPosition();
-                int motorDriveRightEncoderError = encoderTarget - motorDriveRightBack.getCurrentPosition();
-                double motorDriveLeftPercentEncoderError = (double)(motorDriveLeftEncoderError) / (double)encoderTarget;
-                double motorDriveRightPercentEncoderError = (double)(motorDriveRightEncoderError) / (double)encoderTarget;
-
-                double motorDriveLeftPower = Math.signum(motorDriveLeftEncoderError) * (ENCODER_DRIVE_Kp * Math.abs(motorDriveLeftPercentEncoderError) * (1 - Math.abs(motorDriveLeftPercentEncoderError)) + ENCODER_DRIVE_POWER_OFFSET);
-                double motorDriveRightPower = Math.signum(motorDriveRightEncoderError) * (ENCODER_DRIVE_Kp * Math.abs(motorDriveRightPercentEncoderError) * (1 - Math.abs(motorDriveRightPercentEncoderError)) + ENCODER_DRIVE_POWER_OFFSET);
-
-                setSplitPower(motorDriveLeftPower, motorDriveRightPower);
-
-                if (!hasAllEncodersMoved(previousEncoders, currentEncoders)) {
-                    ENCODER_DRIVE_POWER_OFFSET += (motorDriveLeftPercentEncoderError + motorDriveRightPercentEncoderError)/2.0 * ENCODER_DRIVE_POWER_OFFSET_STEP;
-                }
-
-                previousEncoders = currentEncoders;
-
-                telemetry.addData("Boolean checks", (Math.abs(motorDriveLeftBack.getCurrentPosition() - encoderTarget) > ENCODER_DRIVE_ERROR_ALLOWANCE
-                        || Math.abs(motorDriveRightBack.getCurrentPosition() - encoderTarget) > ENCODER_DRIVE_ERROR_ALLOWANCE));
-                telemetry.addData("Front Encoders", "(%7d):(%7d)", motorDriveLeftFront.getCurrentPosition(), motorDriveRightFront.getCurrentPosition());
-                telemetry.addData("Back Encoders", "(%7d):(%7d)", motorDriveLeftBack.getCurrentPosition(), motorDriveRightBack.getCurrentPosition());
-                telemetry.addData("Encoder Target", encoderTarget);
-                telemetry.addData("Encoder Errors", "(%7d):(%7d)", motorDriveLeftEncoderError, motorDriveRightEncoderError);
-                telemetry.addData("Percent Errors", "(%.2f):(%.2f)", motorDriveLeftPercentEncoderError, motorDriveRightPercentEncoderError);
-                telemetry.addData("Power", "Left (%.2f), Right (%.2f)", motorDriveLeftPower, motorDriveRightPower);
-                telemetry.addData("Timing", "(%.2f) of (%.2f)", elapsedTime.seconds(), secondsTimeout);
-                telemetry.update();
-            }
+        int factor = 1;
+        if (Math.abs(targetDistance) != targetDistance){
+            factor = -1;
         }
-
+        double speed = 0;
+        double encodertarget = Math.abs(targetDistance * COUNTS_PER_INCH)*SCALE_FACTOR;
+        telemetry.addData("Original Encoder Target",targetDistance*COUNTS_PER_INCH);
+        telemetry.addData("Adjusted Encoder Target",encodertarget);
+        telemetry.update();
+        while (checkEncoders(encodertarget) && opMode.opModeIsActive() && !opMode.isStopRequested()) {
+            if (averageEncoderValue() < encodertarget*ENCODER_STRAFE_Kp){
+                speed = factor*(averageEncoderValue()*(1.0-MINIMUM_SPEED)/(encodertarget*ENCODER_STRAFE_Kp) + MINIMUM_SPEED);
+            }
+            else if (averageEncoderValue() > encodertarget*(1.0-ENCODER_STRAFE_Kp)) {
+                speed = factor*((encodertarget-averageEncoderValue()) * (1.0-MINIMUM_SPEED)/(encodertarget*ENCODER_STRAFE_Kp) + MINIMUM_SPEED);
+            }
+            else if (averageEncoderValue() > encodertarget*ENCODER_STRAFE_Kp
+                    && averageEncoderValue() < encodertarget*(1.0-ENCODER_STRAFE_Kp)){
+                speed = factor;
+            }
+            setAllPower(speed);
+        }
         //Stop the robot and terminate any loops running
         abortMotion();
 
@@ -249,16 +196,16 @@ public class AutoFourWheelDrive {
         motorDriveLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorDriveRightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorDriveRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        raiseSweeper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         motorDriveLeftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorDriveLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorDriveRightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorDriveRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        raiseSweeper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     private void abortMotion() {
-        hasAborted = true;
-
         setAllPower(0);
 
         telemetry.addData("Status", "Drive Motion Aborted");
@@ -305,6 +252,11 @@ public class AutoFourWheelDrive {
         };
     }
 
+    private int averageEncoderValue () {
+        int [] encoderPositions = getEncoderValues();
+        return (Math.abs(encoderPositions[0]) + Math.abs(encoderPositions[1]) + Math.abs(encoderPositions[2]) + Math.abs(encoderPositions[3]))/4;
+    }
+
     /**
      * Compares two arrays of encoder values and determines whether or not all motors haved moved.
      *
@@ -323,6 +275,16 @@ public class AutoFourWheelDrive {
         return true;
     }
 
+    private boolean checkEncoders (double encodervalue) {
+        if (Math.abs(motorDriveLeftBack.getCurrentPosition()) < (encodervalue)
+            && (Math.abs(motorDriveLeftFront.getCurrentPosition()) < (encodervalue))
+            && (Math.abs(motorDriveRightBack.getCurrentPosition()) < (encodervalue))
+            && (Math.abs(motorDriveRightFront.getCurrentPosition()) < (encodervalue))) {
+            return true;
+        }
+    return false;
+    }
+
     public void strafe(double leftpower, double rightpower) {
         motorDriveLeftFront.setPower(leftpower);
         motorDriveRightBack.setPower(rightpower);
@@ -337,7 +299,7 @@ public class AutoFourWheelDrive {
             return trial;
         }
         else {
-            encoderStrafe(10,10);
+            encoderStrafe(10);
         }
         return 0;
     }
@@ -349,6 +311,14 @@ public class AutoFourWheelDrive {
         if (block_position == 0) {
             block_position = check_block(3);
         }
+        /*while (block_position < 10) {
+            telemetry.addData("Alpha",color_sensor.alpha());
+            telemetry.addData("Red", color_sensor.red());
+            telemetry.addData("Green",color_sensor.green());
+            telemetry.addData("block position", block_position);
+            telemetry.update();
+        }*/
         return block_position;
     }
+
 }
