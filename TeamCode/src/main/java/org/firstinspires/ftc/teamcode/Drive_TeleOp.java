@@ -28,6 +28,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="TeleOP", group="Main")
 public class Drive_TeleOp extends OpMode {
@@ -39,10 +40,13 @@ public class Drive_TeleOp extends OpMode {
     private DcMotor raiseSweeper;
     private DcMotor sweeperRight;
     private DcMotor sweeperLeft;
+    private DcMotor raiseSlider;
     private CRServo extend_servo;
     private Servo flipper_servo;
     private  double  MinPosition = 0, MaxPosition = 1;
 
+    private boolean servo_toggle = true;
+    private double armposition = .5;
     @Override public void init() {
         telemetry.clearAll();
         telemetry.addData("Status", "TeleOP Initialization In Progress");
@@ -56,15 +60,16 @@ public class Drive_TeleOp extends OpMode {
         raiseSweeper = hardwareMap.get(DcMotor.class,  "raiseSweeper");
         sweeperRight = hardwareMap.get(DcMotor.class,  "sweeperRight");
         sweeperLeft = hardwareMap.get(DcMotor.class, "sweeperLeft");
+        raiseSlider = hardwareMap.get(DcMotor.class, "raiseSlider");
         extend_servo = hardwareMap.get(CRServo.class,"extend_servo");
         flipper_servo = hardwareMap.get(Servo.class, "flipper_servo");
         //flip_server = hardwareMap.get(Servo.class, "flip_servo");
 
         // Since one motor is reversed in relation to the other, we must reverse the motor on the right so positive powers mean forward.
-        motorDriveLeftBack.setDirection(DcMotor.Direction.FORWARD);
+        motorDriveLeftBack.setDirection(DcMotor.Direction.REVERSE);
         motorDriveLeftFront.setDirection(DcMotor.Direction.REVERSE);
         motorDriveRightBack.setDirection(DcMotor.Direction.FORWARD);
-        motorDriveRightFront.setDirection(DcMotor.Direction.REVERSE);
+        motorDriveRightFront.setDirection(DcMotor.Direction.FORWARD);
 
         motorDriveLeftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorDriveLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -95,7 +100,6 @@ public class Drive_TeleOp extends OpMode {
 
     @Override public void loop() {
         //Driving Code
-
         double speed = Math.sqrt(2) * Math.pow(Math.pow(gamepad1.left_stick_x, 4) + Math.pow(gamepad1.left_stick_y, 4), 0.5);
         double angle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x);
 
@@ -118,30 +122,59 @@ public class Drive_TeleOp extends OpMode {
         }*/
 
         if (gamepad1.right_trigger > 0){
-            sweeperRight.setPower(1);
-            sweeperLeft.setPower(-1);
+            sweeperRight.setPower(gamepad1.right_trigger);
+            sweeperLeft.setPower(-gamepad1.right_trigger);
         }
         else if (gamepad1.right_bumper) {
             sweeperRight.setPower(-1);
             sweeperLeft.setPower(1);
         }
-        else if (gamepad1.left_trigger > 0) {
-            raiseSweeper.setPower(1);
-        }
-        else if (gamepad1.left_bumper) {
-            raiseSweeper.setPower(-1);
-        }
-        else if (gamepad1.left_trigger ==0) {
-            raiseSweeper.setPower(0);
-            sweeperRight.setPower(0);
+        else if (!gamepad1.right_bumper) {
             sweeperLeft.setPower(0);
+            sweeperRight.setPower(0);
         }
 
-        if (gamepad2.right_trigger > 0) {
-            extend_servo.setPower(1);
+        if (gamepad1.dpad_up) {
+            telemetry.addData("DPAD:","DPAD UP");
+            raiseSweeper.setPower(-1);
+        }
+        else if (gamepad1.dpad_down) {
+            telemetry.addData(("DPAD:"), "DPAD DOWN");
+            raiseSweeper.setPower(1);
+        }
+        else if (!gamepad1.dpad_down && !gamepad1.dpad_up) {
+            telemetry.addData("DPAD:","DPAD ZERO");
+            raiseSweeper.setPower(0);
+        }
+
+        if (gamepad2.right_stick_x != 0) {
+            extend_servo.setPower(gamepad2.right_stick_x);
         }
         else if (gamepad2.right_trigger == 0) {
             extend_servo.setPower(0);
+        }
+
+        if (gamepad2.right_stick_y != 0) {
+            raiseSlider.setPower(gamepad2.right_stick_y);
+        }
+        else if (gamepad2.right_stick_y == 0) {
+            raiseSlider.setPower(0);
+        }
+
+        if (gamepad2.right_trigger > 0) {
+            telemetry.addData("Flipper Position",flipper_servo.getPosition());
+            if (servo_toggle) {
+                armposition = -.5;
+                servo_toggle = !servo_toggle;
+            }
+            else {
+                armposition = .5;
+                servo_toggle = !servo_toggle;
+            }
+            flipper_servo.setPosition(Range.clip(flipper_servo.getPosition() + .5,MinPosition,MaxPosition));
+        }
+        else if (gamepad2.right_trigger == 0) {
+            flipper_servo.setPosition(flipper_servo.getPosition());
         }
 
         telemetry.addData("Raise Sweeper Position",raiseSweeper.getCurrentPosition());
@@ -154,8 +187,8 @@ public class Drive_TeleOp extends OpMode {
 
     public void setSplitPower(double power) {
         motorDriveLeftBack.setPower(power);
-        motorDriveLeftFront.setPower(-power);
-        motorDriveRightBack.setPower(power);
+        motorDriveLeftFront.setPower(power);
+        motorDriveRightBack.setPower(-power);
         motorDriveRightFront.setPower(-power);
     }
 
