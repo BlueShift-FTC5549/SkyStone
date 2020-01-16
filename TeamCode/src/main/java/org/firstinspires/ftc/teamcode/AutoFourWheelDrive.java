@@ -23,7 +23,8 @@ public class AutoFourWheelDrive {
     private DcMotor raiseSweeper;
 
     //Servos
-    private Servo flip_servo;
+    private Servo flipper_servo;
+    private Servo flipper_servo2;
     private Servo arm_flipper;
     private CRServo extintion_servo;
 
@@ -62,6 +63,8 @@ public class AutoFourWheelDrive {
         this.motorDriveRightBack = opMode.hardwareMap.get(DcMotor.class, motorDriveRightName + "Back");
         this.motorDriveRightFront = opMode.hardwareMap.get(DcMotor.class, motorDriveRightName + "Front");
         this.raiseSweeper = opMode.hardwareMap.get(DcMotor.class, "raiseSweeper");
+        this.flipper_servo = opMode.hardwareMap.get(Servo.class, "flipper_servo");
+        this.flipper_servo2 = opMode.hardwareMap.get(Servo.class,"flipper_servo2");
         this.imu = new IMU(opMode.telemetry, opMode.hardwareMap, IMUName);
 
         this.telemetry = opMode.telemetry;
@@ -324,5 +327,61 @@ public class AutoFourWheelDrive {
         }*/
         return block_position;
     }
+    public void move_foundation (int side) {
+        // Bring Robot away from depot
+        encoderDrive(13*side,.5);
+        sleep_sec(.25);
 
+        // Drive Robot to foundation
+        encoderStrafe(-29,.3);
+        sleep_sec(.25);
+
+        // Put The arms down
+        flipper_servo.setPosition(1);
+        flipper_servo2.setPosition(0.3);
+        sleep_sec(1);
+
+        // Drive Robot slightly more to ensure arms are securely locked onto foundation
+        encoderStrafe(-2,0.1);
+        sleep_sec(.5);
+
+        // Drive Robot back to wall to get foundation in depot
+        encoderStrafe(30.3,.7);
+        sleep_sec(.25);
+
+        // Lift arms back up
+        flipper_servo2.setPosition(.9);
+        flipper_servo.setPosition(.5);
+        sleep_sec(.4);
+
+        // Turn slightly to counter turning while strafing
+        turn(-5*side);
+        sleep_sec(.25);
+
+        // Drive Robot towards parking zone
+        encoderDrive(29*side,1);
+        sleep_sec(.25);
+
+        // Turn robot to go park
+        turn(90*side);
+        sleep_sec(.25);
+
+        // Drive robot to park across tape
+        encoderStrafe(-20,.7);
+        sleep_sec(.25);
+
+        // Move robot out of the way of other robot
+        encoderDrive(2*side,.1);
+    }
+
+    private void sleep_sec (double time_seconds) {
+        try
+        {
+            Thread.sleep((int)time_seconds*1000);
+        }
+        catch(InterruptedException ex)
+        {
+            Thread.currentThread().interrupt();
+        }
+    }
 }
