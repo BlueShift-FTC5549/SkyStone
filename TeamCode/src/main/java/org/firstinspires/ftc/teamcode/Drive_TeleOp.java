@@ -161,20 +161,13 @@ public class Drive_TeleOp extends OpMode {
             raiseSlider.setPower(0);
         }
 
-        if (gamepad2.right_trigger > 0) {
-            telemetry.addData("Flipper Position",flipper_servo.getPosition());
-            if (servo_toggle) {
-                armposition = -.5;
-                servo_toggle = !servo_toggle;
-            }
-            else {
-                armposition = .5;
-                servo_toggle = !servo_toggle;
-            }
-            flipper_servo.setPosition(Range.clip(flipper_servo.getPosition() + .5,MinPosition,MaxPosition));
+        if (gamepad2.right_bumper) {
+            armposition = flipper_servo.getPosition() - .25;
+            flipper_servo.setPosition(armposition);
         }
-        else if (gamepad2.right_trigger == 0) {
-            flipper_servo.setPosition(flipper_servo.getPosition());
+        else if (gamepad2.left_bumper) {
+            armposition = flipper_servo.getPosition() + .25;
+            flipper_servo.setPosition(armposition);
         }
 
         telemetry.addData("Raise Sweeper Position",raiseSweeper.getCurrentPosition());

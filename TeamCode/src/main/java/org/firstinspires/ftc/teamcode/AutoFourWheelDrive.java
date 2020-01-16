@@ -46,12 +46,12 @@ public class AutoFourWheelDrive {
     private static final double COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
     private static final int    ENCODER_NO_MOVEMENT_THRESHOLD = 12;
     private static final double MINIMUM_SPEED = 0.3;
-    private static final double ENCODER_STRAFE_Kp = 0.35;
+    private static final double ENCODER_STRAFE_Kp = 0.45;
     private static final double SCALE_FACTOR = 55.0/52.0;
 
     //Turning Constants
     private static final float TURN_Kp = 0.75f;
-    private static final float TURN_ERROR_ALLOWANCE = (float)5; //In Degrees
+    private static final float TURN_ERROR_ALLOWANCE = (float)2; //In Degrees
     private static final float TURN_POWER_OFFSET_STEP = (float)0.015;
 
     public AutoFourWheelDrive(LinearOpMode opMode,  String ColorSensorName, String motorDriveLeftName, String motorDriveRightName, String IMUName) {
@@ -127,7 +127,7 @@ public class AutoFourWheelDrive {
         telemetry.addData("Turning", "Complete at " + imu.getHeading() + " degrees");
         telemetry.update();
     }
-    public void encoderStrafe(double targetDistance) {
+    public void encoderStrafe(double targetDistance,double maxspeed) {
         resetEncoders();
         int factor = 1;
         if (Math.abs(targetDistance) != targetDistance){
@@ -146,6 +146,9 @@ public class AutoFourWheelDrive {
                     && averageEncoderValue() < encodertarget*(1.0-ENCODER_STRAFE_Kp)){
                 speed = factor;
             }
+            if (speed > maxspeed) {
+                speed = maxspeed;
+            }
             strafe(speed,speed);
         }
         //Stop the robot and terminate any loops running
@@ -160,7 +163,7 @@ public class AutoFourWheelDrive {
      *
      * @param targetDistance The distance in inches to travel
      */
-    public void encoderDrive(double targetDistance) {
+    public void encoderDrive(double targetDistance,double maxspeed) {
         resetEncoders();
         int factor = 1;
         if (Math.abs(targetDistance) != targetDistance){
@@ -182,6 +185,7 @@ public class AutoFourWheelDrive {
                     && averageEncoderValue() < encodertarget*(1.0-ENCODER_STRAFE_Kp)){
                 speed = factor;
             }
+            if (speed > maxspeed) speed = maxspeed;
             setAllPower(speed);
         }
         //Stop the robot and terminate any loops running
@@ -295,11 +299,11 @@ public class AutoFourWheelDrive {
 
     public int check_block(int trial) {
         telemetry.addData("Red",color_sensor.red());
-        if (color_sensor.red() < 180){
+        if (color_sensor.red() < 40){
             return trial;
         }
         else {
-            encoderStrafe(10);
+            encoderDrive(-7,.5);
         }
         return 0;
     }

@@ -9,14 +9,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Autonomous",group = "Autonomous")
-public class Autonomous extends LinearOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Platform Blue",group = "Autonomous")
+public class PlatformBlue extends LinearOpMode {
     private AutoFourWheelDrive autoFourWheelDrive;
     private int block_position;
     private DistanceSensor distance_sensor;
     private ColorSensor color_sensor;
     private DcMotor raiseSweeper;
     private Servo flipper_servo;
+    private Servo flipper_servo2;
     private double counter = 0;
 
     private void initialize() {
@@ -27,12 +28,14 @@ public class Autonomous extends LinearOpMode {
         color_sensor = this.hardwareMap.colorSensor.get("color_sensor");
         raiseSweeper = this.hardwareMap.get(DcMotor.class,"raiseSweeper");
         flipper_servo = hardwareMap.get(Servo.class,"flipper_servo");
+        flipper_servo2 = hardwareMap.get(Servo.class,"flipper_servo2");
 
         raiseSweeper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         raiseSweeper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         setTelemetryStatus("Initialized");
         flipper_servo.setPosition(0.4);
+        flipper_servo2.setPosition(.9);
         sleep_sec(.4);
     }
     @Override
@@ -43,26 +46,29 @@ public class Autonomous extends LinearOpMode {
 
         telemetry.clearAll();
         //Turn the rest of the angle to be facing away from the lander
-        //autoFourWheelDrive.encoderDrive(21);
-        autoFourWheelDrive.setAllPower(.1);
-        sleep_sec(.5);
-        autoFourWheelDrive.strafe(.1,.1);
-        sleep_sec(.5);
-        //autoFourWheelDrive.encoderStrafe(-27);
-        while (distance_sensor.getDistance(DistanceUnit.CM) > 5.5) {
-            autoFourWheelDrive.strafe(-.1,-.1);
-        }
-        autoFourWheelDrive.setAllPower(0);
-        block_position = autoFourWheelDrive.find_block();
-        flipper_servo.setPosition(1);
-        sleep_sec(.5);
-        //autoFourWheelDrive.encoderStrafe(-.35);
-        //autoFourWheelDrive.encoderStrafe(10);
-        //autoFourWheelDrive.encoderDrive(-80);
-        if (block_position == 0) {
-            //autoFourWheelDrive.encoderDrive(56);
-        }
         //telemetry.addData("Color", color_sensor.red());
+        autoFourWheelDrive.encoderDrive(-13,.5);
+        sleep_sec(.25);
+        autoFourWheelDrive.encoderStrafe(-29,.3);
+        sleep_sec(.25);
+        flipper_servo.setPosition(1);
+        flipper_servo2.setPosition(0.3);
+        sleep_sec(1);
+        autoFourWheelDrive.encoderStrafe(-2,0.1);
+        sleep_sec(.5);
+        autoFourWheelDrive.encoderStrafe(30.3,.7);
+        sleep_sec(.25);
+        flipper_servo2.setPosition(.9);
+        flipper_servo.setPosition(.5);
+        sleep_sec(.4);
+        autoFourWheelDrive.turn(5);
+        sleep_sec(.25);
+        autoFourWheelDrive.encoderDrive(29,1);
+        sleep_sec(.25);
+        autoFourWheelDrive.turn(-90);
+        autoFourWheelDrive.encoderStrafe(-20,.7);
+        sleep_sec(.25);
+        autoFourWheelDrive.encoderDrive(1.5,.1);
         telemetry.addData("Block Pos",block_position);
         telemetry.update();
 

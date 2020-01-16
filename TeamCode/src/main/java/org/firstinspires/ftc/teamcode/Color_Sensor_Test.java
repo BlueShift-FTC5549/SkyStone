@@ -30,10 +30,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.util.SerialNumber;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -58,6 +60,8 @@ public class Color_Sensor_Test extends OpMode {
     private ColorSensor color_sensor;
     private DistanceSensor distance_sensor;
     private AutoFourWheelDrive autoFourWheelDrive;
+    private Servo flipper_servo;
+    private Servo flipper_servo2;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -69,11 +73,14 @@ public class Color_Sensor_Test extends OpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        color_sensor = hardwareMap.colorSensor.get("color_sensor");
+        color_sensor = hardwareMap.get(ColorSensor.class, "color_sensor");
         distance_sensor = hardwareMap.get(DistanceSensor.class,"color_sensor");
-
+        flipper_servo = hardwareMap.get(Servo.class, "flipper_servo");
+        flipper_servo2 = hardwareMap.servo.get("flipper_servo2");
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
+        flipper_servo.setPosition(1);
+        flipper_servo2.setPosition(.9);
     }
 
     /*`
@@ -99,6 +106,7 @@ public class Color_Sensor_Test extends OpMode {
         // Setup a variable for each drive wheel to save power level for telemetry
         telemetry.addData("Distance", distance_sensor.getDistance(DistanceUnit.CM));
         telemetry.addData("Color",color_sensor.red());
+        telemetry.addData("Position",flipper_servo.getPosition());
         telemetry.update();
 
         /*if (color_sensor.red() < 30) {
