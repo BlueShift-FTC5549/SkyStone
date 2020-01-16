@@ -108,8 +108,8 @@ public class Drive_TeleOp extends OpMode {
 
     @Override public void loop() {
         //Driving Code
-        double speed = Math.sqrt(2) * Math.pow(Math.pow(-gamepad1.left_stick_y, 4) + Math.pow(gamepad1.left_stick_x, 4), 0.5);
-        double angle = Math.atan2(gamepad1.left_stick_x, -gamepad1.left_stick_y);
+        double speed = Math.sqrt(2) * Math.pow(Math.pow(gamepad1.left_stick_y, 4) + Math.pow(gamepad1.left_stick_x, 4), 0.5);
+        double angle = Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y);
 
         float primaryDiagonalSpeed = (float) (speed * Math.sin(angle + (Math.PI / 4.0)));
         float secondaryDiagonalSpeed = (float) (speed * Math.cos(angle + (Math.PI / 4.0)));
