@@ -329,7 +329,7 @@ public class AutoFourWheelDrive {
     }
     public void move_foundation (int side) {
         // Bring Robot away from depot
-        encoderDrive(13*side,.5);
+        encoderDrive(11*side,1);
         sleep_sec(.25);
 
         // Drive Robot to foundation
@@ -346,7 +346,7 @@ public class AutoFourWheelDrive {
         sleep_sec(.5);
 
         // Drive Robot back to wall to get foundation in depot
-        encoderStrafe(30.3,.7);
+        encoderStrafe(33,.7);
         sleep_sec(.25);
 
         // Lift arms back up
@@ -355,11 +355,11 @@ public class AutoFourWheelDrive {
         sleep_sec(.4);
 
         // Turn slightly to counter turning while strafing
-        turn(-5*side);
+        turn(-4*side);
         sleep_sec(.25);
 
         // Drive Robot towards parking zone
-        encoderDrive(29*side,1);
+        encoderDrive(-29*side,1);
         sleep_sec(.25);
 
         // Turn robot to go park
@@ -371,7 +371,7 @@ public class AutoFourWheelDrive {
         sleep_sec(.25);
 
         // Move robot out of the way of other robot
-        encoderDrive(2*side,.1);
+        encoderDrive(-2*side,.1);
     }
 
     private void sleep_sec (double time_seconds) {

@@ -43,6 +43,8 @@ public class Drive_TeleOp extends OpMode {
     private DcMotor raiseSlider;
     private CRServo extend_servo;
     private Servo flipper_servo;
+    private Servo flipper_servo2;
+    private Servo clamp_servo;
     private  double  MinPosition = 0, MaxPosition = 1;
 
     private boolean servo_toggle = true;
@@ -63,6 +65,8 @@ public class Drive_TeleOp extends OpMode {
         raiseSlider = hardwareMap.get(DcMotor.class, "raiseSlider");
         extend_servo = hardwareMap.get(CRServo.class,"extend_servo");
         flipper_servo = hardwareMap.get(Servo.class, "flipper_servo");
+        clamp_servo = hardwareMap.get(Servo.class,"clamp_servo");
+        flipper_servo2 = hardwareMap.get(Servo.class,"flipper_servo2");
         //flip_server = hardwareMap.get(Servo.class, "flip_servo");
 
         // Since one motor is reversed in relation to the other, we must reverse the motor on the right so positive powers mean forward.
@@ -87,6 +91,10 @@ public class Drive_TeleOp extends OpMode {
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
+        flipper_servo2.setPosition(.9);
+        flipper_servo.setPosition(.4);
+
     }
 
     @Override public void init_loop() { }
@@ -100,8 +108,8 @@ public class Drive_TeleOp extends OpMode {
 
     @Override public void loop() {
         //Driving Code
-        double speed = Math.sqrt(2) * Math.pow(Math.pow(gamepad1.left_stick_x, 4) + Math.pow(gamepad1.left_stick_y, 4), 0.5);
-        double angle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x);
+        double speed = Math.sqrt(2) * Math.pow(Math.pow(-gamepad1.left_stick_y, 4) + Math.pow(gamepad1.left_stick_x, 4), 0.5);
+        double angle = Math.atan2(gamepad1.left_stick_x, -gamepad1.left_stick_y);
 
         float primaryDiagonalSpeed = (float) (speed * Math.sin(angle + (Math.PI / 4.0)));
         float secondaryDiagonalSpeed = (float) (speed * Math.cos(angle + (Math.PI / 4.0)));
@@ -112,14 +120,8 @@ public class Drive_TeleOp extends OpMode {
         motorDriveRightBack.setPower(primaryDiagonalSpeed);
 
         if (gamepad1.right_stick_x != 0){
-            setSplitPower(-gamepad1.right_stick_x);
+            setSplitPower(gamepad1.right_stick_x);
         }
-        /*if (gamepad1.a == true) {
-            flip_server.setPosition(Range.clip(.5, MinPosition, MaxPosition));
-        }
-        if (gamepad1.b == true) {
-            flip_server.setPosition(Range.clip(-0.5,0,1));
-        }*/
 
         if (gamepad1.right_trigger > 0){
             sweeperRight.setPower(gamepad1.right_trigger);
@@ -161,13 +163,11 @@ public class Drive_TeleOp extends OpMode {
             raiseSlider.setPower(0);
         }
 
-        if (gamepad2.right_bumper) {
-            armposition = flipper_servo.getPosition() - .25;
-            flipper_servo.setPosition(armposition);
+        if (gamepad2.dpad_up) {
+            clamp_servo.setPosition(1);
         }
-        else if (gamepad2.left_bumper) {
-            armposition = flipper_servo.getPosition() + .25;
-            flipper_servo.setPosition(armposition);
+        else if (gamepad2.dpad_down) {
+            clamp_servo.setPosition(.7);
         }
 
         telemetry.addData("Raise Sweeper Position",raiseSweeper.getCurrentPosition());
@@ -192,7 +192,7 @@ public class Drive_TeleOp extends OpMode {
         motorDriveLeftBack.setPower(-power);
     }
 
-    public void setPower (double power){
+    public void setAllPower (double power){
         motorDriveLeftBack.setPower(-power);
         motorDriveLeftFront.setPower(power);
         motorDriveRightBack.setPower(-power);
