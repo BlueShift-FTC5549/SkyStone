@@ -108,8 +108,8 @@ public class Drive_TeleOp extends OpMode {
 
     @Override public void loop() {
         //Driving Code
-        double speed = Math.sqrt(2) * Math.pow(Math.pow(gamepad1.left_stick_y, 4) + Math.pow(gamepad1.left_stick_x, 4), 0.5);
-        double angle = Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y);
+        double speed = Math.sqrt(2) * Math.pow(Math.pow(gamepad1.left_stick_y, 4) + Math.pow(-gamepad1.left_stick_x, 4), 0.5);
+        double angle = Math.atan2(-gamepad1.left_stick_x, gamepad1.left_stick_y);
 
         float primaryDiagonalSpeed = (float) (speed * Math.sin(angle + (Math.PI / 4.0)));
         float secondaryDiagonalSpeed = (float) (speed * Math.cos(angle + (Math.PI / 4.0)));
@@ -127,13 +127,9 @@ public class Drive_TeleOp extends OpMode {
             sweeperRight.setPower(gamepad1.right_trigger);
             sweeperLeft.setPower(-gamepad1.right_trigger);
         }
-        else if (gamepad1.right_bumper) {
-            sweeperRight.setPower(-1);
-            sweeperLeft.setPower(1);
-        }
-        else if (!gamepad1.right_bumper) {
-            sweeperLeft.setPower(0);
-            sweeperRight.setPower(0);
+        else if (gamepad1.left_trigger > 0) {
+            sweeperRight.setPower(-gamepad1.left_trigger);
+            sweeperLeft.setPower(gamepad1.left_trigger);
         }
 
         if (gamepad1.dpad_up) {
