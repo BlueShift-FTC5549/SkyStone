@@ -24,11 +24,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="TeleOP", group="Main")
 public class Drive_TeleOp extends OpMode {
@@ -40,12 +38,8 @@ public class Drive_TeleOp extends OpMode {
     private DcMotor raiseSweeper;
     private DcMotor sweeperRight;
     private DcMotor sweeperLeft;
-    private DcMotor raiseSlider;
-    private CRServo extend_servo;
     private Servo flipper_servo;
     private Servo flipper_servo2;
-    private Servo clamp_servo;
-    private  double  MinPosition = 0, MaxPosition = 1;
 
     private boolean servo_toggle = true;
     private double armposition = .5;
@@ -62,10 +56,7 @@ public class Drive_TeleOp extends OpMode {
         raiseSweeper = hardwareMap.get(DcMotor.class,  "raiseSweeper");
         sweeperRight = hardwareMap.get(DcMotor.class,  "sweeperRight");
         sweeperLeft = hardwareMap.get(DcMotor.class, "sweeperLeft");
-        raiseSlider = hardwareMap.get(DcMotor.class, "raiseSlider");
-        extend_servo = hardwareMap.get(CRServo.class,"extend_servo");
         flipper_servo = hardwareMap.get(Servo.class, "flipper_servo");
-        clamp_servo = hardwareMap.get(Servo.class,"clamp_servo");
         flipper_servo2 = hardwareMap.get(Servo.class,"flipper_servo2");
         //flip_server = hardwareMap.get(Servo.class, "flip_servo");
 
@@ -119,51 +110,39 @@ public class Drive_TeleOp extends OpMode {
         motorDriveLeftFront.setPower(primaryDiagonalSpeed );
         motorDriveRightBack.setPower(primaryDiagonalSpeed);
 
-        if (gamepad1.right_stick_x != 0){
-            setSplitPower(gamepad1.right_stick_x);
-        }
+        setSplitPower(gamepad1.right_stick_x);
 
         if (gamepad1.right_trigger > 0){
             sweeperRight.setPower(gamepad1.right_trigger);
             sweeperLeft.setPower(-gamepad1.right_trigger);
         }
         else if (gamepad1.left_trigger > 0) {
-            sweeperRight.setPower(-gamepad1.left_trigger);
-            sweeperLeft.setPower(gamepad1.left_trigger);
+            sweeperRight.setPower(-gamepad1.left_trigger/3);
+            sweeperLeft.setPower(gamepad1.left_trigger/3);
         }
-
-        if (gamepad1.dpad_up) {
-            telemetry.addData("DPAD:","DPAD UP");
+        else if (gamepad1.left_trigger == 0 && gamepad1.right_trigger == 0) {
+            sweeperLeft.setPower(0);
+            sweeperRight.setPower(0);
+        }
+        if (gamepad1.right_bumper) {
             raiseSweeper.setPower(-1);
         }
-        else if (gamepad1.dpad_down) {
-            telemetry.addData(("DPAD:"), "DPAD DOWN");
+        else if (gamepad1.left_bumper) {
             raiseSweeper.setPower(1);
         }
-        else if (!gamepad1.dpad_down && !gamepad1.dpad_up) {
-            telemetry.addData("DPAD:","DPAD ZERO");
+        else if (!gamepad1.right_bumper && !gamepad1.left_bumper) {
             raiseSweeper.setPower(0);
         }
 
-        if (gamepad2.right_stick_x != 0) {
-            extend_servo.setPower(gamepad2.right_stick_x);
+        if (gamepad1.dpad_down) {
+            flipper_servo2.setPosition(.3);
+            flipper_servo.setPosition(1);
+            sleep_sec(.7);
         }
-        else if (gamepad2.right_trigger == 0) {
-            extend_servo.setPower(0);
-        }
-
-        if (gamepad2.right_stick_y != 0) {
-            raiseSlider.setPower(gamepad2.right_stick_y);
-        }
-        else if (gamepad2.right_stick_y == 0) {
-            raiseSlider.setPower(0);
-        }
-
-        if (gamepad2.dpad_up) {
-            clamp_servo.setPosition(1);
-        }
-        else if (gamepad2.dpad_down) {
-            clamp_servo.setPosition(.7);
+        else if (gamepad1.dpad_up) {
+            flipper_servo.setPosition(.4);
+            flipper_servo2.setPosition(.9);
+            sleep_sec(.7);
         }
 
         telemetry.addData("Raise Sweeper Position",raiseSweeper.getCurrentPosition());
@@ -193,5 +172,16 @@ public class Drive_TeleOp extends OpMode {
         motorDriveLeftFront.setPower(power);
         motorDriveRightBack.setPower(-power);
         motorDriveRightFront.setPower(power);
+    }
+
+    private void sleep_sec (double time_seconds) {
+        try
+        {
+            Thread.sleep((int)time_seconds*1000);
+        }
+        catch(InterruptedException ex)
+        {
+            Thread.currentThread().interrupt();
+        }
     }
 }

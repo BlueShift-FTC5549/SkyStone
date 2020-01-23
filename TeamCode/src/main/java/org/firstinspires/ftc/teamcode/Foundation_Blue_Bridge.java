@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Foundation Red",group = "Autonomous")
-public class Foundation_Red extends LinearOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Foundation Blue Bridge",group = "Autonomous")
+public class Foundation_Blue_Bridge extends LinearOpMode {
     private AutoFourWheelDrive autoFourWheelDrive;
     private Servo flipper_servo;
     private Servo flipper_servo2;
@@ -29,7 +29,7 @@ public class Foundation_Red extends LinearOpMode {
         waitForStart();
 
         telemetry.clearAll();
-        autoFourWheelDrive.move_foundation(1,1);
+        autoFourWheelDrive.move_foundation(-1,0);
     }
 
     public void setTelemetryStatus(String status) {

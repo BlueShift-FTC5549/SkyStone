@@ -29,7 +29,7 @@ public class Foundation_Blue extends LinearOpMode {
         waitForStart();
 
         telemetry.clearAll();
-        autoFourWheelDrive.move_foundation(-1);
+        autoFourWheelDrive.move_foundation(-1,1);
     }
 
     public void setTelemetryStatus(String status) {

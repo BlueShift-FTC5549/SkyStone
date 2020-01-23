@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "BLocks Blue",group = "Autonomous")
-public class Autonomous extends LinearOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "BLocks Red",group = "Autonomous")
+public class Blocks_Red extends LinearOpMode {
     private AutoFourWheelDrive autoFourWheelDrive;
     private int block_position;
     private DistanceSensor distance_sensor;
@@ -45,9 +45,9 @@ public class Autonomous extends LinearOpMode {
         //Turn the rest of the angle to be facing away from the lander
         //autoFourWheelDrive.encoderDrive(21);
         autoFourWheelDrive.encoderStrafe(-25,.7);
-        autoFourWheelDrive.turn(90);
+        autoFourWheelDrive.turn(-90);
         autoFourWheelDrive.encoderStrafe(-34,.5);
-        autoFourWheelDrive.encoderDrive(2,.1);
+        autoFourWheelDrive.encoderDrive(-2,.1);
         /*while (distance_sensor.getDistance(DistanceUnit.CM) > 5.5) {
             autoFourWheelDrive.strafe(-.1,-.1);
         }
