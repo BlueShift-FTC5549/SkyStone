@@ -43,19 +43,15 @@ public class Autonomous extends LinearOpMode {
 
         telemetry.clearAll();
         //Turn the rest of the angle to be facing away from the lander
-        //autoFourWheelDrive.encoderDrive(21);
-        autoFourWheelDrive.encoderStrafe(-25,.7);
-        autoFourWheelDrive.turn(90);
-        autoFourWheelDrive.encoderStrafe(-34,.5);
-        autoFourWheelDrive.encoderDrive(2,.1);
-        /*while (distance_sensor.getDistance(DistanceUnit.CM) > 5.5) {
+        autoFourWheelDrive.encoderStrafe(21,.7);
+        while (distance_sensor.getDistance(DistanceUnit.CM) > 5.5) {
             autoFourWheelDrive.strafe(-.1,-.1);
         }
         autoFourWheelDrive.setAllPower(0);
         block_position = autoFourWheelDrive.find_block();
         flipper_servo.setPosition(1);
-        sleep_sec(.5);*/
-        //telemetry.addData("Color", color_sensor.red());
+        sleep_sec(.5);
+        telemetry.addData("Color", color_sensor.red());
         telemetry.addData("Block Pos",block_position);
         telemetry.update();
 

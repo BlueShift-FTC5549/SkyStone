@@ -41,8 +41,9 @@ public class Drive_TeleOp extends OpMode {
     private Servo flipper_servo;
     private Servo flipper_servo2;
 
-    private boolean servo_toggle = true;
-    private double armposition = .5;
+    private boolean slow = false;
+    private double slow_value = 5;
+
     @Override public void init() {
         telemetry.clearAll();
         telemetry.addData("Status", "TeleOP Initialization In Progress");
@@ -98,19 +99,16 @@ public class Drive_TeleOp extends OpMode {
     }
 
     @Override public void loop() {
-        //Driving Code
-        double speed = Math.sqrt(2) * Math.pow(Math.pow(gamepad1.left_stick_y, 4) + Math.pow(-gamepad1.left_stick_x, 4), 0.5);
-        double angle = Math.atan2(-gamepad1.left_stick_x, gamepad1.left_stick_y);
+        if (gamepad1.y) {
+            slow = !slow;
+        }
 
-        float primaryDiagonalSpeed = (float) (speed * Math.sin(angle + (Math.PI / 4.0)));
-        float secondaryDiagonalSpeed = (float) (speed * Math.cos(angle + (Math.PI / 4.0)));
-
-        motorDriveLeftBack.setPower(secondaryDiagonalSpeed);
-        motorDriveRightFront.setPower(secondaryDiagonalSpeed);
-        motorDriveLeftFront.setPower(primaryDiagonalSpeed );
-        motorDriveRightBack.setPower(primaryDiagonalSpeed);
-
-        setSplitPower(gamepad1.right_stick_x);
+        if (slow) {
+            drive(slow_value);
+        }
+        else {
+            drive(1);
+        }
 
         if (gamepad1.right_trigger > 0){
             sweeperRight.setPower(gamepad1.right_trigger);
@@ -151,6 +149,22 @@ public class Drive_TeleOp extends OpMode {
         telemetry.addData("Left X",gamepad1.left_stick_x);
         telemetry.addData("Left Y",gamepad1.left_stick_y);
         telemetry.update();
+    }
+    private void drive (double power_factor) {
+        //Driving Code
+        double speed = Math.sqrt(2) * Math.pow(Math.pow(gamepad1.left_stick_y, 4) + Math.pow(-gamepad1.left_stick_x, 4), 0.5);
+        double angle = Math.atan2(-gamepad1.left_stick_x, gamepad1.left_stick_y);
+
+        float primaryDiagonalSpeed = (float) (speed * Math.sin(angle + (Math.PI / 4.0)));
+        float secondaryDiagonalSpeed = (float) (speed * Math.cos(angle + (Math.PI / 4.0)));
+
+        motorDriveLeftBack.setPower(secondaryDiagonalSpeed/power_factor);
+        motorDriveRightFront.setPower(secondaryDiagonalSpeed/power_factor);
+        motorDriveLeftFront.setPower(primaryDiagonalSpeed/power_factor);
+        motorDriveRightBack.setPower(primaryDiagonalSpeed/power_factor);
+
+        setSplitPower(gamepad1.right_stick_x/power_factor);
+
     }
 
     public void setSplitPower(double power) {
