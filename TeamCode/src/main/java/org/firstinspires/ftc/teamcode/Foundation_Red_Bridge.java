@@ -19,7 +19,7 @@ public class Foundation_Red_Bridge extends LinearOpMode {
 
         setTelemetryStatus("Initialized");
         flipper_servo.setPosition(0.4);
-        flipper_servo2.setPosition(.9);
+        flipper_servo2.setPosition(.7);
         sleep_sec(.4);
     }
     @Override

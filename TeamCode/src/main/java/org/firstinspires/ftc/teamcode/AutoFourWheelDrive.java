@@ -302,11 +302,11 @@ public class AutoFourWheelDrive {
 
     public int check_block(int trial) {
         telemetry.addData("Red",color_sensor.red());
-        if (color_sensor.red() < 40){
+        if (color_sensor.red() < 30){
             return trial;
         }
         else {
-            encoderDrive(-7,.5);
+            encoderDrive(-6.8,.1);
         }
         return 0;
     }
@@ -329,7 +329,7 @@ public class AutoFourWheelDrive {
     }
     public void move_foundation (int side, int park_side) {
         // Bring Robot away from depot
-        encoderDrive(11*side,1);
+        encoderDrive(11*side,.3);
         sleep_sec(.25);
 
         // Drive Robot to foundation
@@ -338,24 +338,21 @@ public class AutoFourWheelDrive {
 
         // Put The arms down
         flipper_servo.setPosition(1);
-        flipper_servo2.setPosition(0.3);
+        flipper_servo2.setPosition(0);
         sleep_sec(1);
 
-        // Drive Robot slightly more to ensure arms are securely locked onto foundation
-        encoderStrafe(-2,0.1);
-
         // Drive Robot back to wall to get foundation in depot
-        encoderStrafe(33,.5);
+        encoderStrafe(32,.3);
         sleep_sec(.25);
 
         // Lift arms back up
-        flipper_servo2.setPosition(.9);
-        flipper_servo.setPosition(.5);
+        flipper_servo2.setPosition(.4);
+        flipper_servo.setPosition(.4);
         sleep_sec(.4);
 
         // Turn slightly to counter turning while strafing
         // Drive Robot towards parking zone
-        encoderDrive(-29*side,1);
+        encoderDrive(-29*side,.3);
         sleep_sec(.25);
 
         // Turn robot to go park
@@ -363,7 +360,7 @@ public class AutoFourWheelDrive {
         sleep_sec(.25);
 
         // Drive robot to park across tape
-        encoderStrafe(-20,.7);
+        encoderStrafe(-20,.3);
         sleep_sec(.25);
 
         // Move robot out of the way of other robot

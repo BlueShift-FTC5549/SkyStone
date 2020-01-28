@@ -24,9 +24,11 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="TeleOP", group="Main")
 public class Drive_TeleOp extends OpMode {
@@ -38,11 +40,14 @@ public class Drive_TeleOp extends OpMode {
     private DcMotor raiseSweeper;
     private DcMotor sweeperRight;
     private DcMotor sweeperLeft;
+    private DcMotor lift;
     private Servo flipper_servo;
     private Servo flipper_servo2;
-
+    private Servo lift_servo;
+    private double powerfactor = 1.0;
     private boolean slow = false;
-    private double slow_value = 5;
+    private boolean flipup = true;
+    private  double  MinPosition = 0, MaxPosition = 1;
 
     @Override public void init() {
         telemetry.clearAll();
@@ -57,7 +62,9 @@ public class Drive_TeleOp extends OpMode {
         raiseSweeper = hardwareMap.get(DcMotor.class,  "raiseSweeper");
         sweeperRight = hardwareMap.get(DcMotor.class,  "sweeperRight");
         sweeperLeft = hardwareMap.get(DcMotor.class, "sweeperLeft");
+        lift = hardwareMap.get(DcMotor.class, "lift");
         flipper_servo = hardwareMap.get(Servo.class, "flipper_servo");
+        lift_servo = hardwareMap.get(Servo.class,"lift_servo");
         flipper_servo2 = hardwareMap.get(Servo.class,"flipper_servo2");
         //flip_server = hardwareMap.get(Servo.class, "flip_servo");
 
@@ -73,18 +80,18 @@ public class Drive_TeleOp extends OpMode {
         motorDriveRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         raiseSweeper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        motorDriveLeftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorDriveLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorDriveRightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorDriveRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        raiseSweeper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorDriveLeftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorDriveLeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorDriveRightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorDriveRightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        raiseSweeper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        flipper_servo2.setPosition(.9);
+        flipper_servo2.setPosition(.7);
         flipper_servo.setPosition(.4);
 
     }
@@ -104,53 +111,61 @@ public class Drive_TeleOp extends OpMode {
         }
 
         if (slow) {
-            drive(slow_value);
+            powerfactor = 0.5;
         }
-        else {
-            drive(1);
+        else if (!slow) {
+            powerfactor = 1;
         }
 
-        if (gamepad1.right_trigger > 0){
-            sweeperRight.setPower(gamepad1.right_trigger);
-            sweeperLeft.setPower(-gamepad1.right_trigger);
+        drive(slow);
+
+        if (gamepad2.right_trigger > 0) {
+            sweeperRight.setPower(1);
+            sweeperLeft.setPower(-1);
         }
-        else if (gamepad1.left_trigger > 0) {
-            sweeperRight.setPower(-gamepad1.left_trigger/3);
-            sweeperLeft.setPower(gamepad1.left_trigger/3);
+        else if (gamepad2.left_trigger > 0) {
+            sweeperRight.setPower(-1);
+            sweeperLeft.setPower(1);
         }
-        else if (gamepad1.left_trigger == 0 && gamepad1.right_trigger == 0) {
+        else if (gamepad2.left_trigger == 0 && gamepad2.right_trigger == 0) {
             sweeperLeft.setPower(0);
             sweeperRight.setPower(0);
         }
-        if (gamepad1.right_bumper) {
-            raiseSweeper.setPower(-1);
-        }
-        else if (gamepad1.left_bumper) {
+
+        if (gamepad2.right_bumper) {
             raiseSweeper.setPower(1);
         }
-        else if (!gamepad1.right_bumper && !gamepad1.left_bumper) {
+        else if (gamepad2.left_bumper) {
+            raiseSweeper.setPower(-1);
+        }
+        else {
             raiseSweeper.setPower(0);
         }
 
-        if (gamepad1.dpad_down) {
-            flipper_servo2.setPosition(.3);
-            flipper_servo.setPosition(1);
-            sleep_sec(.7);
+        lift.setPower(gamepad2.right_stick_y);
+
+        if (gamepad1.left_bumper) {
+            lift_servo.setPosition(.3);
         }
-        else if (gamepad1.dpad_up) {
-            flipper_servo.setPosition(.4);
-            flipper_servo2.setPosition(.9);
-            sleep_sec(.7);
+        else if (gamepad1.right_bumper) {
+            lift_servo.setPosition(1);
         }
 
-        telemetry.addData("Raise Sweeper Position",raiseSweeper.getCurrentPosition());
-        telemetry.addData("Right X",gamepad1.right_stick_x);
-        telemetry.addData("Right Y",gamepad1.right_stick_y);
-        telemetry.addData("Left X",gamepad1.left_stick_x);
-        telemetry.addData("Left Y",gamepad1.left_stick_y);
-        telemetry.update();
+        if (gamepad2.y) {
+            flipup = !flipup;
+            if (!flipup) {
+                flipper_servo2.setPosition(0);
+                flipper_servo.setPosition(1);
+            }
+            else if (flipup) {
+                flipper_servo.setPosition(.4);
+                flipper_servo2.setPosition(.4);
+            }
+        }
+
     }
-    private void drive (double power_factor) {
+
+    public void drive (boolean slow) {
         //Driving Code
         double speed = Math.sqrt(2) * Math.pow(Math.pow(gamepad1.left_stick_y, 4) + Math.pow(-gamepad1.left_stick_x, 4), 0.5);
         double angle = Math.atan2(-gamepad1.left_stick_x, gamepad1.left_stick_y);
@@ -158,15 +173,15 @@ public class Drive_TeleOp extends OpMode {
         float primaryDiagonalSpeed = (float) (speed * Math.sin(angle + (Math.PI / 4.0)));
         float secondaryDiagonalSpeed = (float) (speed * Math.cos(angle + (Math.PI / 4.0)));
 
-        motorDriveLeftBack.setPower(secondaryDiagonalSpeed/power_factor);
-        motorDriveRightFront.setPower(secondaryDiagonalSpeed/power_factor);
-        motorDriveLeftFront.setPower(primaryDiagonalSpeed/power_factor);
-        motorDriveRightBack.setPower(primaryDiagonalSpeed/power_factor);
+        motorDriveLeftBack.setPower(secondaryDiagonalSpeed*powerfactor);
+        motorDriveRightFront.setPower(secondaryDiagonalSpeed*powerfactor);
+        motorDriveLeftFront.setPower(primaryDiagonalSpeed*powerfactor);
+        motorDriveRightBack.setPower(primaryDiagonalSpeed*powerfactor);
 
-        setSplitPower(gamepad1.right_stick_x/power_factor);
-
+        if (gamepad1.right_stick_x != 0){
+            setSplitPower(gamepad1.right_stick_x*powerfactor);
+        }
     }
-
     public void setSplitPower(double power) {
         motorDriveLeftBack.setPower(power);
         motorDriveLeftFront.setPower(power);
@@ -186,16 +201,5 @@ public class Drive_TeleOp extends OpMode {
         motorDriveLeftFront.setPower(power);
         motorDriveRightBack.setPower(-power);
         motorDriveRightFront.setPower(power);
-    }
-
-    private void sleep_sec (double time_seconds) {
-        try
-        {
-            Thread.sleep((int)time_seconds*1000);
-        }
-        catch(InterruptedException ex)
-        {
-            Thread.currentThread().interrupt();
-        }
     }
 }

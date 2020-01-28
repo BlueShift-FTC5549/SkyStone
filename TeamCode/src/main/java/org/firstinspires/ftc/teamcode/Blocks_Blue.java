@@ -10,13 +10,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "BLocks Blue",group = "Autonomous")
-public class Autonomous extends LinearOpMode {
+public class Blocks_Blue extends LinearOpMode {
     private AutoFourWheelDrive autoFourWheelDrive;
     private int block_position;
     private DistanceSensor distance_sensor;
     private ColorSensor color_sensor;
     private DcMotor raiseSweeper;
     private Servo flipper_servo;
+    private Servo flipper_servo2;
+    private Servo lift_servo;
     private double counter = 0;
 
     private void initialize() {
@@ -27,12 +29,16 @@ public class Autonomous extends LinearOpMode {
         color_sensor = this.hardwareMap.colorSensor.get("color_sensor");
         raiseSweeper = this.hardwareMap.get(DcMotor.class,"raiseSweeper");
         flipper_servo = hardwareMap.get(Servo.class,"flipper_servo");
+        flipper_servo2 = hardwareMap.get(Servo.class,"flipper_servo2");
+        lift_servo = hardwareMap.get(Servo.class,"lift_servo");
 
         raiseSweeper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         raiseSweeper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         setTelemetryStatus("Initialized");
         flipper_servo.setPosition(0.4);
+        flipper_servo2.setPosition(0.7);
+        lift_servo.setPosition(.1);
         sleep_sec(.4);
     }
     @Override
@@ -43,14 +49,18 @@ public class Autonomous extends LinearOpMode {
 
         telemetry.clearAll();
         //Turn the rest of the angle to be facing away from the lander
-        autoFourWheelDrive.encoderStrafe(21,.7);
+        autoFourWheelDrive.encoderStrafe(-28,.3);
         while (distance_sensor.getDistance(DistanceUnit.CM) > 5.5) {
             autoFourWheelDrive.strafe(-.1,-.1);
+            telemetry.addData("Distance",distance_sensor.getDistance(DistanceUnit.CM));
         }
         autoFourWheelDrive.setAllPower(0);
         block_position = autoFourWheelDrive.find_block();
         flipper_servo.setPosition(1);
-        sleep_sec(.5);
+        autoFourWheelDrive.encoderStrafe(8,.1);
+        autoFourWheelDrive.encoderDrive(-36.8-block_position*6.8,.3);
+        //flipper_servo.setPosition(1);
+        //sleep_sec(.5);
         telemetry.addData("Color", color_sensor.red());
         telemetry.addData("Block Pos",block_position);
         telemetry.update();
