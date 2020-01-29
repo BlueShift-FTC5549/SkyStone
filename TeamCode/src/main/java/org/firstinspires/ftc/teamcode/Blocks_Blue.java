@@ -51,20 +51,21 @@ public class Blocks_Blue extends LinearOpMode {
         //Turn the rest of the angle to be facing away from the lander
         autoFourWheelDrive.encoderStrafe(-28,.3);
         while (distance_sensor.getDistance(DistanceUnit.CM) > 5.5) {
-            autoFourWheelDrive.strafe(-.1,-.1);
+            autoFourWheelDrive.strafe(-.1);
             telemetry.addData("Distance",distance_sensor.getDistance(DistanceUnit.CM));
         }
         autoFourWheelDrive.setAllPower(0);
+        autoFourWheelDrive.encoderDrive(3,.3);
         block_position = autoFourWheelDrive.find_block();
-        flipper_servo.setPosition(1);
-        autoFourWheelDrive.encoderStrafe(8,.1);
-        autoFourWheelDrive.encoderDrive(-36.8-block_position*6.8,.3);
-        //flipper_servo.setPosition(1);
-        //sleep_sec(.5);
-        telemetry.addData("Color", color_sensor.red());
         telemetry.addData("Block Pos",block_position);
         telemetry.update();
-
+        autoFourWheelDrive.encoderDrive(-2,.3);
+        flipper_servo.setPosition(1);
+        autoFourWheelDrive.encoderStrafe(6,.5);
+        flipper_servo.setPosition(0.83);
+        autoFourWheelDrive.encoderDrive(-60.8+block_position*5.4 ,.3);
+        //flipper_servo.setPosition(1);
+        //sleep_sec(.5);
         //telemetry.addData("Block Position", block_position);
     }
 

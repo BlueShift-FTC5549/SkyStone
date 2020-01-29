@@ -6,10 +6,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
@@ -38,6 +40,7 @@ public class AutoFourWheelDrive {
 
     //Color Sensor
     private ColorSensor color_sensor;
+    private DistanceSensor distance_sensor;
     private int block_position;
 
     //Encoder Constants
@@ -65,6 +68,7 @@ public class AutoFourWheelDrive {
         this.raiseSweeper = opMode.hardwareMap.get(DcMotor.class, "raiseSweeper");
         this.flipper_servo = opMode.hardwareMap.get(Servo.class, "flipper_servo");
         this.flipper_servo2 = opMode.hardwareMap.get(Servo.class,"flipper_servo2");
+        this.distance_sensor = opMode.hardwareMap.get(DistanceSensor.class,"color_sensor");
         this.imu = new IMU(opMode.telemetry, opMode.hardwareMap, IMUName);
 
         this.telemetry = opMode.telemetry;
@@ -152,7 +156,7 @@ public class AutoFourWheelDrive {
             if (speed > maxspeed) {
                 speed = maxspeed;
             }
-            strafe(speed,speed);
+            strafe(speed);
         }
         //Stop the robot and terminate any loops running
         abortMotion();
@@ -292,21 +296,27 @@ public class AutoFourWheelDrive {
     return false;
     }
 
-    public void strafe(double leftpower, double rightpower) {
-        motorDriveLeftFront.setPower(leftpower);
-        motorDriveRightBack.setPower(rightpower);
+    public void strafe(double power) {
+        motorDriveLeftFront.setPower(power);
+        motorDriveRightBack.setPower(power);
 
-        motorDriveRightFront.setPower(-rightpower);
-        motorDriveLeftBack.setPower(-leftpower);
+        motorDriveRightFront.setPower(-power);
+        motorDriveLeftBack.setPower(-power);
     }
 
     public int check_block(int trial) {
         telemetry.addData("Red",color_sensor.red());
+        sleep_sec(.5);
         if (color_sensor.red() < 30){
             return trial;
         }
         else {
-            encoderDrive(-6.8,.1);
+            encoderDrive(-7,.1);
+            while (distance_sensor.getDistance(DistanceUnit.CM) > 5.5) {
+                strafe(-.1);
+                telemetry.addData("Distance",distance_sensor.getDistance(DistanceUnit.CM));
+            }
+            setAllPower(0);
         }
         return 0;
     }
