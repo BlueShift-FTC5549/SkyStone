@@ -8,6 +8,7 @@ public class Foundation_Red extends LinearOpMode {
     private AutoFourWheelDrive autoFourWheelDrive;
     private Servo flipper_servo;
     private Servo flipper_servo2;
+    private Servo lift_servo;
     private double counter = 0;
 
     private void initialize() {
@@ -16,10 +17,13 @@ public class Foundation_Red extends LinearOpMode {
         autoFourWheelDrive = new AutoFourWheelDrive(this,"color_sensor","motorDriveLeft","motorDriveRight","imu");
         flipper_servo = hardwareMap.get(Servo.class,"flipper_servo");
         flipper_servo2 = hardwareMap.get(Servo.class,"flipper_servo2");
+        lift_servo = hardwareMap.get(Servo.class,"lift_servo");
+
 
         setTelemetryStatus("Initialized");
         flipper_servo.setPosition(0.4);
         flipper_servo2.setPosition(.7);
+        lift_servo.setPosition(.1);
         sleep_sec(.4);
     }
     @Override

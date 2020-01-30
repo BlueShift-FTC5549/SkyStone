@@ -16,7 +16,9 @@ public class Blocks_Red extends LinearOpMode {
     private DistanceSensor distance_sensor;
     private ColorSensor color_sensor;
     private DcMotor raiseSweeper;
+    private Servo flipper_servo2;
     private Servo flipper_servo;
+    private Servo lift_servo;
     private double counter = 0;
 
     private void initialize() {
@@ -27,12 +29,16 @@ public class Blocks_Red extends LinearOpMode {
         color_sensor = this.hardwareMap.colorSensor.get("color_sensor");
         raiseSweeper = this.hardwareMap.get(DcMotor.class,"raiseSweeper");
         flipper_servo = hardwareMap.get(Servo.class,"flipper_servo");
+        flipper_servo2 = hardwareMap.get(Servo.class,"flipper_servo2");
+        lift_servo = hardwareMap.get(Servo.class,"lift_servo");
 
         raiseSweeper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         raiseSweeper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         setTelemetryStatus("Initialized");
         flipper_servo.setPosition(0.4);
+        flipper_servo2.setPosition(0.4);
+        lift_servo.setPosition(.1);
         sleep_sec(.4);
     }
     @Override
