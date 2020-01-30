@@ -48,25 +48,7 @@ public class Blocks_Blue extends LinearOpMode {
         waitForStart();
 
         telemetry.clearAll();
-        //Turn the rest of the angle to be facing away from the lander
-        autoFourWheelDrive.encoderStrafe(-28,.3);
-        while (distance_sensor.getDistance(DistanceUnit.CM) > 5.5) {
-            autoFourWheelDrive.strafe(-.1);
-            telemetry.addData("Distance",distance_sensor.getDistance(DistanceUnit.CM));
-        }
-        autoFourWheelDrive.setAllPower(0);
-        autoFourWheelDrive.encoderDrive(3,.3);
-        block_position = autoFourWheelDrive.find_block();
-        telemetry.addData("Block Pos",block_position);
-        telemetry.update();
-        autoFourWheelDrive.encoderDrive(-2,.3);
-        flipper_servo.setPosition(1);
-        autoFourWheelDrive.encoderStrafe(6,.5);
-        flipper_servo.setPosition(0.83);
-        autoFourWheelDrive.encoderDrive(-60.8+block_position*5.4 ,.3);
-        //flipper_servo.setPosition(1);
-        //sleep_sec(.5);
-        //telemetry.addData("Block Position", block_position);
+        autoFourWheelDrive.block_side(1);
     }
 
     public void setTelemetryStatus(String status) {

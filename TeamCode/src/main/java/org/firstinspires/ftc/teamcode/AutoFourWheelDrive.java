@@ -304,14 +304,14 @@ public class AutoFourWheelDrive {
         motorDriveLeftBack.setPower(-power);
     }
 
-    public int check_block(int trial) {
+    public int check_block(int trial,int side) {
         telemetry.addData("Red",color_sensor.red());
         sleep_sec(.5);
         if (color_sensor.red() < 30){
             return trial;
         }
         else {
-            encoderDrive(-7,.1);
+            encoderDrive(-7*side,.1);
             while (distance_sensor.getDistance(DistanceUnit.CM) > 5.5) {
                 strafe(-.1);
                 telemetry.addData("Distance",distance_sensor.getDistance(DistanceUnit.CM));
@@ -320,13 +320,13 @@ public class AutoFourWheelDrive {
         }
         return 0;
     }
-    public int find_block () {
-        block_position = check_block(1);
+    public int find_block (int side) {
+        block_position = check_block(1,side);
         if (block_position == 0) {
-            block_position = check_block(2);
+            block_position = check_block(2,side);
         }
         if (block_position == 0) {
-            block_position = check_block(3);
+            block_position = check_block(3,side);
         }
         /*while (block_position < 10) {
             telemetry.addData("Alpha",color_sensor.alpha());
@@ -362,26 +362,53 @@ public class AutoFourWheelDrive {
 
         // Turn slightly to counter turning while strafing
         // Drive Robot towards parking zone
-        encoderDrive(-29*side,.3);
-        sleep_sec(.25);
-
-        // Turn robot to go park
-        turn(90*side);
-        sleep_sec(.25);
-
-        // Drive robot to park across tape
-        encoderStrafe(-20,.3);
+        encoderDrive(-40*side,.3);
         sleep_sec(.25);
 
         // Move robot out of the way of other robot
         if (park_side == 1) {
-            encoderDrive(-2 * side, .2);
+            encoderStrafe(-2 * side, .2);
         }
         else if (park_side == 0) {
-            encoderDrive(27*side,.2);
+            encoderStrafe(27*side,.2);
         }
     }
 
+    public void block_side (int side) {
+        // Drive to blocks
+        encoderStrafe(-28, .3);
+
+        // Use Distance sensor to move up
+        while (distance_sensor.getDistance(DistanceUnit.CM) > 5.5) {
+            strafe(-.1);
+            telemetry.addData("Distance", distance_sensor.getDistance(DistanceUnit.CM));
+        }
+        setAllPower(0);
+
+        // Drive back to make sure sensor senses block
+        encoderDrive(3 * side, .3);
+
+        // find SkyStone
+        block_position = find_block(side);
+
+        // Drive to center arm
+        encoderDrive(-2 * side, .3);
+
+        // flip arms down
+        flipper_servo.setPosition(1);
+
+        // drive back
+        encoderStrafe(6, .5);
+
+        // bring arm up a little
+        flipper_servo.setPosition(0.83);
+
+        // bring block over to other side
+        encoderDrive(-60.8 + block_position * 5.4 * side, .3);
+
+        // park
+        encoderDrive(20 * side, .3);
+    }
     private void sleep_sec (double time_seconds) {
         try
         {
