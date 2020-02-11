@@ -106,18 +106,18 @@ public class Drive_TeleOp extends OpMode {
     }
 
     @Override public void loop() {
-        if (gamepad1.y) {
+        if (gamepad1.y || gamepad2.y) {
             slow = !slow;
         }
 
         if (slow) {
-            powerfactor = 0.5;
+            powerfactor = 0.15;
         }
         else if (!slow) {
             powerfactor = 1;
         }
 
-        drive(slow);
+        drive(powerfactor);
 
         if (gamepad2.right_trigger > 0) {
             sweeperRight.setPower(1);
@@ -151,21 +151,11 @@ public class Drive_TeleOp extends OpMode {
             lift_servo.setPosition(1);
         }
 
-        if (gamepad2.y) {
-            flipup = !flipup;
-            if (!flipup) {
-                flipper_servo2.setPosition(0);
-                flipper_servo.setPosition(1);
-            }
-            else if (flipup) {
-                flipper_servo.setPosition(.4);
-                flipper_servo2.setPosition(.4);
-            }
-        }
+        if (gamepad2.dpad_up) {lift_servo.setPosition(.1);}
 
     }
 
-    public void drive (boolean slow) {
+    public void drive (double power_factor) {
         //Driving Code
         double speed = Math.sqrt(2) * Math.pow(Math.pow(gamepad1.left_stick_y, 4) + Math.pow(-gamepad1.left_stick_x, 4), 0.5);
         double angle = Math.atan2(-gamepad1.left_stick_x, gamepad1.left_stick_y);
@@ -173,10 +163,10 @@ public class Drive_TeleOp extends OpMode {
         float primaryDiagonalSpeed = (float) (speed * Math.sin(angle + (Math.PI / 4.0)));
         float secondaryDiagonalSpeed = (float) (speed * Math.cos(angle + (Math.PI / 4.0)));
 
-        motorDriveLeftBack.setPower(secondaryDiagonalSpeed*powerfactor);
-        motorDriveRightFront.setPower(secondaryDiagonalSpeed*powerfactor);
-        motorDriveLeftFront.setPower(primaryDiagonalSpeed*powerfactor);
-        motorDriveRightBack.setPower(primaryDiagonalSpeed*powerfactor);
+        motorDriveLeftBack.setPower(secondaryDiagonalSpeed*power_factor);
+        motorDriveRightFront.setPower(secondaryDiagonalSpeed*power_factor);
+        motorDriveLeftFront.setPower(primaryDiagonalSpeed*power_factor);
+        motorDriveRightBack.setPower(primaryDiagonalSpeed*power_factor);
 
         if (gamepad1.right_stick_x != 0){
             setSplitPower(gamepad1.right_stick_x*powerfactor);

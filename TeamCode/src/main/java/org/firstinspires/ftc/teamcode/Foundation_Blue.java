@@ -33,6 +33,7 @@ public class Foundation_Blue extends LinearOpMode {
         waitForStart();
 
         telemetry.clearAll();
+        sleep_sec(10);
         autoFourWheelDrive.move_foundation(-1,1);
     }
 

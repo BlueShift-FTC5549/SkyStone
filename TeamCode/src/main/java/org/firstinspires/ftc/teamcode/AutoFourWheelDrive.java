@@ -312,7 +312,7 @@ public class AutoFourWheelDrive {
         }
         else {
             encoderDrive(-7*side,.1);
-            while (distance_sensor.getDistance(DistanceUnit.CM) > 5.5) {
+            while (distance_sensor.getDistance(DistanceUnit.CM) > 5.9) {
                 strafe(-.1);
                 telemetry.addData("Distance",distance_sensor.getDistance(DistanceUnit.CM));
             }
@@ -362,14 +362,11 @@ public class AutoFourWheelDrive {
 
         // Turn slightly to counter turning while strafing
         // Drive Robot towards parking zone
-        encoderDrive(-40*side,.3);
+        encoderDrive(-47*side,.3);
         sleep_sec(.25);
 
         // Move robot out of the way of other robot
-        if (park_side == 1) {
-            encoderStrafe(-2 * side, .2);
-        }
-        else if (park_side == 0) {
+        if (park_side == 0) {
             encoderStrafe(27*side,.2);
         }
     }
@@ -395,19 +392,28 @@ public class AutoFourWheelDrive {
         encoderDrive(-2 * side, .3);
 
         // flip arms down
-        flipper_servo.setPosition(1);
+        if (side == 1) { flipper_servo.setPosition(1); }
+        else if (side == -1) {flipper_servo2.setPosition(0); }
 
         // drive back
         encoderStrafe(6, .5);
 
         // bring arm up a little
-        flipper_servo.setPosition(0.83);
+        if (side == 1) {flipper_servo.setPosition(0.83);}
+        else if (side == -1) {flipper_servo2.setPosition(.1);}
 
         // bring block over to other side
-        encoderDrive(-60.8 + block_position * 5.4 * side, .3);
+        encoderDrive((-60.8 + block_position * 5.4)*side, .3);
+
+        // flip arms up
+        flipper_servo.setPosition(0);
+        flipper_servo2.setPosition(.7);
 
         // park
         encoderDrive(20 * side, .3);
+
+        // drive forward
+        encoderStrafe(-4,.1);
     }
     private void sleep_sec (double time_seconds) {
         try
